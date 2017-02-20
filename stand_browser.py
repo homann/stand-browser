@@ -32,6 +32,13 @@ import os.path
 # Import various QGIs classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
 
+from collections import namedtuple
+import re
+
+StandTuple = namedtuple('StandTuple', ['fid', 'standid'])
+    
+
+
 class StandBrowser:
     """QGIS Plugin Implementation."""
 
@@ -213,7 +220,13 @@ class StandBrowser:
         del self.toolbar
 
     #--------------------------------------------------------------------------
-
+    def stand_sort(self, stand_tuple):
+        """Sorting algorithm for natural sort, inspired by
+        https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/ """
+        convert = lambda text: int(text) if text.isdigit() else text
+        return [ convert(c) for c in re.split('([0-9]+)', stand_tuple.standid) ]
+        
+    
     def update_active_layer(self):
         """Select active layer from the layer selector"""
 
@@ -227,27 +240,33 @@ class StandBrowser:
             return
         layer_id = self.dockwidget.cbLayer.itemData(layer_idx)
         self.layer = QgsMapLayerRegistry.instance().mapLayer(layer_id)
-        self.layerFeatureIds = [f.id() for f in self.layer.getFeatures()]
-        feature_id = self.layerFeatureIds[self.layerFeatureIdx]
-        self.layerActiveFeature = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
-        self.dockwidget.leActive.setText(self.layerActiveFeature.attribute('standid'))
-        
-    def update_active_feature(self):
-        """Select active feature from the feature selector"""
+        self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.getFeatures()]
+        self.layerFeatureIds.sort(key = self.stand_sort)
 
-        feature_iter = self.layer.getFeatures(QgsFeatureRequest().setFilterExpression( u'"standid" = \''+self.dockwidget.leActive.text()+'\'' ))
+    def le_find_stand(self):
+        #feature_iter = self.layer.getFeatures(QgsFeatureRequest().setFilterExpression( u'"standid" = \''+self.dockwidget.leActive.text()+'\'' ))
         # If feature_iter is empty, no such standid is found so we do nothing.
-        for f in feature_iter:
-            self.layerActiveFeature = f
-            self.layerFeatureIdx = self.layerFeatureIds.index(f.id())
-            # Zoom to new feature and select it.
-            self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx]])
-            if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
-                self.iface.mapCanvas().panToSelected(self.layer)
-            if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
-                self.iface.mapCanvas().setExtent(f.geometry().boundingBox())
-            self.iface.mapCanvas().refresh()
-            break;
+        #for f in feature_iter:
+        #self.layerActiveFeature = f
+        #    self.layerFeatureIdx = self.layerFeatureIds.index(f.id())
+        return;
+    
+    def update_active_feature(self):
+        """Update active feature from feature index"""
+
+        # Update new feature pointer and text in box
+        feature_id = self.layerFeatureIds[self.layerFeatureIdx].fid
+        f = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
+        self.layerActiveFeature = f
+        self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
+        # Zoom to new feature and select it.
+        self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
+        if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
+            self.iface.mapCanvas().panToSelected(self.layer)
+        if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
+            self.iface.mapCanvas().setExtent(f.geometry().boundingBox())
+        self.iface.mapCanvas().refresh()
+
     
     def pb_next_stand(self):
         """Find next stand in layer"""
@@ -256,9 +275,6 @@ class StandBrowser:
         if self.layerFeatureIdx == len(self.layerFeatureIds):
             self.layerFeatureIdx = 0
             
-        feature_id = self.layerFeatureIds[self.layerFeatureIdx]
-        self.layerActiveFeature = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
-        self.dockwidget.leActive.setText(self.layerActiveFeature.attribute('standid'))
         self.update_active_feature()
         
     def pb_prev_stand(self):
@@ -268,9 +284,6 @@ class StandBrowser:
         if self.layerFeatureIdx < 0:
             self.layerFeatureIdx = len(self.layerFeatureIds)-1
             
-        feature_id = self.layerFeatureIds[self.layerFeatureIdx]
-        self.layerActiveFeature = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
-        self.dockwidget.leActive.setText(self.layerActiveFeature.attribute('standid'))
         self.update_active_feature()        
         
     def run(self):
@@ -310,6 +323,6 @@ class StandBrowser:
             self.update_active_feature()
 
             # Connect signals from buttons in widget
-            self.dockwidget.leActive.editingFinished.connect(self.update_active_feature)
+            self.dockwidget.leActive.editingFinished.connect(self.le_find_stand)
             self.dockwidget.pbNext.clicked.connect(self.pb_next_stand)
             self.dockwidget.pbPrev.clicked.connect(self.pb_prev_stand)
