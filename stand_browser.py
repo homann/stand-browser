@@ -244,12 +244,10 @@ class StandBrowser:
         self.layerFeatureIds.sort(key = self.stand_sort)
 
     def le_find_stand(self):
-        #feature_iter = self.layer.getFeatures(QgsFeatureRequest().setFilterExpression( u'"standid" = \''+self.dockwidget.leActive.text()+'\'' ))
-        # If feature_iter is empty, no such standid is found so we do nothing.
-        #for f in feature_iter:
-        #self.layerActiveFeature = f
-        #    self.layerFeatureIdx = self.layerFeatureIds.index(f.id())
-        return;
+        result = next((i for i, t in enumerate(self.layerFeatureIds) if t.standid == self.dockwidget.leActive.text()), None)
+        if result != None:
+            self.layerFeatureIdx = result
+        self.update_active_feature()
     
     def update_active_feature(self):
         """Update active feature from feature index"""
