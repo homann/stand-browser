@@ -82,7 +82,7 @@ class StandBrowser:
         self.pluginIsActive = False
         self.dockwidget = None
 
-        self.layer = ""
+        self.layer = None
         self.layerFeatureIds = []
         self.layerFeatureIdx = 0
         self.layerActiveFeature = None
@@ -195,8 +195,13 @@ class StandBrowser:
         #print "** CLOSING StandBrowser"
 
         # disconnects
+        if self.layer != None:
+            self.dockwidget.leActive.editingFinished.disconnect(self.le_find_stand)
+            self.dockwidget.pbNext.clicked.disconnect(self.pb_next_stand)
+            self.dockwidget.pbPrev.clicked.disconnect(self.pb_prev_stand)
+            self.layer.selectionChanged.disconnect(self.set_from_external_selection)
+            self.layer = None
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
-
         # remove this statement if dockwidget is to remain
         # for reuse if plugin is reopened
         # Commented next statement since it causes QGIS crashe
@@ -230,7 +235,10 @@ class StandBrowser:
     def update_active_layer(self):
         """Select active layer from the layer selector"""
 
-        self.layer = ""
+        # Disconnect from old layer
+        if self.layer != None:
+            self.layer.selectionChanged.disconnect(self.set_from_external_selection)
+            
         self.layerFeatureIds = []
         self.layerFeatureIdx = 0
         self.layerActiveFeature = None
@@ -242,14 +250,16 @@ class StandBrowser:
         self.layer = QgsMapLayerRegistry.instance().mapLayer(layer_id)
         self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.getFeatures()]
         self.layerFeatureIds.sort(key = self.stand_sort)
-
+        # Connect updates on selection changes. Should we disconnect somehow when layer changes?
+        self.layer.selectionChanged.connect(self.set_from_external_selection)
+        
     def le_find_stand(self):
         result = next((i for i, t in enumerate(self.layerFeatureIds) if t.standid == self.dockwidget.leActive.text()), None)
         if result != None:
             self.layerFeatureIdx = result
         self.update_active_feature()
     
-    def update_active_feature(self):
+    def update_active_feature(self, change_selection = True):
         """Update active feature from feature index"""
 
         # Update new feature pointer and text in box
@@ -257,12 +267,19 @@ class StandBrowser:
         f = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
         self.layerActiveFeature = f
         self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
-        # Zoom to new feature and select it.
-        self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
-        if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
+
+        # Show info about the feature/stand in docked widget.
+
+        # Change selection to new feature(?)
+        if change_selection:
+            self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
+
+        # Pan and zoom to new feature
+        selected_bb = self.layer.boundingBoxOfSelected()
+        if not self.iface.mapCanvas().extent().contains(selected_bb):
             self.iface.mapCanvas().panToSelected(self.layer)
-        if not self.iface.mapCanvas().extent().contains(f.geometry().boundingBox()):
-            self.iface.mapCanvas().setExtent(f.geometry().boundingBox())
+        if not self.iface.mapCanvas().extent().contains(selected_bb):
+            self.iface.mapCanvas().setExtent(selected_bb)
         self.iface.mapCanvas().refresh()
 
     
@@ -282,11 +299,31 @@ class StandBrowser:
         if self.layerFeatureIdx < 0:
             self.layerFeatureIdx = len(self.layerFeatureIds)-1
             
-        self.update_active_feature()        
+        self.update_active_feature()
+
+    def set_from_external_selection(self):
+        """Change viewed stand according to external change to selection"""
+
+        # If nothing is selected, no change. Otherwise set to first selected
+        # Sort all selcted features according to standid and extract featureId of the first.
+        selectedTuples = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.selectedFeaturesIterator()]
+        if len(selectedTuples):
+            selectedTuples.sort(key = self.stand_sort)
+            fid = selectedTuples[0].fid
+            # Find index
+            result = next((i for i, t in enumerate(self.layerFeatureIds) if t.fid == fid), None)
+            if result != None:
+                self.layerFeatureIdx = result            
+                # Update dock widget without changing selection
+                self.update_active_feature(change_selection = False)
+                return
+        self.update_active_feature(change_selection = True)
         
     def run(self):
         """Run method that loads and starts the plugin"""
 
+        self.layer = None
+        
         if not self.pluginIsActive:
             self.pluginIsActive = True
 
@@ -318,7 +355,7 @@ class StandBrowser:
                             self.dockwidget.cbLayer.addItem(layer.name(), layer.id())
                             break
             self.update_active_layer()
-            self.update_active_feature()
+            self.set_from_external_selection()
 
             # Connect signals from buttons in widget
             self.dockwidget.leActive.editingFinished.connect(self.le_find_stand)
