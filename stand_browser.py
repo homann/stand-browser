@@ -30,15 +30,17 @@ from stand_browser_dockwidget import StandBrowserDockWidget
 import os.path
 
 # Import various QGIs classes
-from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
+from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
 
 from collections import namedtuple
 import re
+from PyQt4.QtCore import *
+
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 StandTuple = namedtuple('StandTuple', ['fid', 'standid'])
     
-
-
 class StandBrowser:
     """QGIS Plugin Implementation."""
 
@@ -225,6 +227,21 @@ class StandBrowser:
         del self.toolbar
 
     #--------------------------------------------------------------------------
+
+    def print_value_locale(self, x):
+        """ A fcuntion top generate a text string suitabel for displaying
+        field values."""
+        
+        if x == NULL:
+            return ""
+        elif type(x) is int:
+            return str(x)
+        elif type(x) is float:
+            return locale.str(x)
+        else:
+            return x
+
+
     def stand_sort(self, stand_tuple):
         """Sorting algorithm for natural sort, inspired by
         https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/ """
@@ -237,6 +254,7 @@ class StandBrowser:
 
         # Disconnect from old layer
         if self.layer != None:
+            # Needs more disconnects?
             self.layer.selectionChanged.disconnect(self.set_from_external_selection)
             
         self.layerFeatureIds = []
@@ -262,14 +280,18 @@ class StandBrowser:
     def update_active_feature(self, change_selection = True):
         """Update active feature from feature index"""
 
-        # Update new feature pointer and text in box
+        # Update new feature pointer
         feature_id = self.layerFeatureIds[self.layerFeatureIdx].fid
         f = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
         self.layerActiveFeature = f
-        self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
 
         # Show info about the feature/stand in docked widget.
-
+        self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
+        self.dockwidget.leMaturity.setText(self.print_value_locale(f.attribute('maturitycl')))
+        self.dockwidget.leArea.setText(self.print_value_locale(f.attribute('prodarea')))
+        self.dockwidget.leAge.setText(self.print_value_locale(f.attribute('meanage')))
+        self.dockwidget.leVolume.setText(self.print_value_locale(f.attribute('v')))
+        
         # Change selection to new feature(?)
         if change_selection:
             self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
