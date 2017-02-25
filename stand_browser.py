@@ -288,9 +288,22 @@ class StandBrowser:
         # Show info about the feature/stand in docked widget.
         self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
         self.dockwidget.leMaturity.setText(self.print_value_locale(f.attribute('maturitycl')))
+        self.dockwidget.leManage.setText(self.print_value_locale(f.attribute('managecl')))
         self.dockwidget.leArea.setText(self.print_value_locale(f.attribute('prodarea')))
         self.dockwidget.leAge.setText(self.print_value_locale(f.attribute('meanage')))
         self.dockwidget.leVolume.setText(self.print_value_locale(f.attribute('v')))
+        self.dockwidget.leSi.setText(self.print_value_locale(f.attribute('sispecie'))+self.print_value_locale(f.attribute('sis')))
+        species = self.print_value_locale(f.attribute('ppine')) + self.print_value_locale(f.attribute('pspruce'))
+        species = species + self.print_value_locale(f.attribute('pbroadleaf')) + self.print_value_locale(f.attribute('pbirch'))
+        species = species + self.print_value_locale(f.attribute('pdeciduous'))
+        self.dockwidget.leSpecies.setText(species)
+        self.dockwidget.leCAI.setText(self.print_value_locale(f.attribute('cai')))
+        self.dockwidget.leDGV.setText(self.print_value_locale(f.attribute('dgv')))
+        self.dockwidget.leN.setText(self.print_value_locale(f.attribute('n')))
+        self.dockwidget.leH.setText(self.print_value_locale(f.attribute('h')))
+        self.dockwidget.leG.setText(self.print_value_locale(f.attribute('g')))
+        self.dockwidget.teComment.setPlainText(self.print_value_locale(f.attribute('comment')))
+        self.dockwidget.deUpdated.setDate(self.print_value_locale(f.attribute('updated')))
         
         # Change selection to new feature(?)
         if change_selection:
