@@ -86,7 +86,9 @@ class StandBrowser:
 
         self.layer = None
         self.layerFeatureIds = []
+        self.layerSelectedIds = []
         self.layerFeatureIdx = 0
+        self.layerSelectedIdx = 0
         self.layerActiveFeature = None
         
     # noinspection PyMethodMayBeStatic
@@ -201,6 +203,8 @@ class StandBrowser:
             self.dockwidget.leActive.editingFinished.disconnect(self.le_find_stand)
             self.dockwidget.pbNext.clicked.disconnect(self.pb_next_stand)
             self.dockwidget.pbPrev.clicked.disconnect(self.pb_prev_stand)
+            self.dockwidget.pbNextSelected.clicked.disconnect(self.pb_next_selected_stand)
+            self.dockwidget.pbPrevSelected.clicked.disconnect(self.pb_prev_selected_stand)
             self.layer.selectionChanged.disconnect(self.set_from_external_selection)
             self.layer = None
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
@@ -249,6 +253,15 @@ class StandBrowser:
         return [ convert(c) for c in re.split('([0-9]+)', stand_tuple.standid) ]
         
     
+    def feature_idx_from_selected_idx(self):
+        """find index in the feture lsit from the current selected feature idx"""
+
+        fid = self.layerSelectedIds[self.layerSelectedIdx].fid
+        result = next((i for i, t in enumerate(self.layerFeatureIds) if t.fid == fid), None)
+        if result != None:
+            self.layerFeatureIdx = result            
+        return result
+
     def update_active_layer(self):
         """Select active layer from the layer selector"""
 
@@ -258,7 +271,9 @@ class StandBrowser:
             self.layer.selectionChanged.disconnect(self.set_from_external_selection)
             
         self.layerFeatureIds = []
+        self.layerSelectedIds = []
         self.layerFeatureIdx = 0
+        self.layerSelectedIdx = 0
         self.layerActiveFeature = None
 
         layer_idx = self.dockwidget.cbLayer.currentIndex()
@@ -308,6 +323,8 @@ class StandBrowser:
         # Change selection to new feature(?)
         if change_selection:
             self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
+            self.layerSelectedIds = [self.layerFeatureIds[self.layerFeatureIdx]]
+            self.layerSelectedIds = 0
 
         # Pan and zoom to new feature
         selected_bb = self.layer.boundingBoxOfSelected()
@@ -336,24 +353,58 @@ class StandBrowser:
             
         self.update_active_feature()
 
+    def pb_next_selected_stand(self):
+        """Find next selected stand in layer"""
+
+        if len(self.layerSelectedIds) == 0:
+            # Nothing selected, just in case
+            return
+        self.layerSelectedIdx =  self.layerSelectedIdx + 1
+        if self.layerSelectedIdx == len(self.layerSelectedIds):
+            self.layerSelectedIdx = 0
+
+        # Now we have the selected feature, find in all feature list
+        self.feature_idx_from_selected_idx()
+        self.update_active_feature(change_selection = False)
+        
+    def pb_prev_selected_stand(self):
+        """Find previous selected stand in layer"""
+
+        if len(self.layerSelectedIds) == 0:
+            # Nothing selected, just in case
+            return
+        self.layerSelectedIdx =  self.layerSelectedIdx - 1
+        if self.layerSelectedIdx < 0:
+            self.layerSelectedIdx = len(self.layerSelectedIds)-1
+
+        # Now we have the selected feature, find in all feature list
+        self.feature_idx_from_selected_idx()
+        self.update_active_feature(change_selection = False)
+
     def set_from_external_selection(self):
         """Change viewed stand according to external change to selection"""
 
         # If nothing is selected, no change. Otherwise set to first selected
         # Sort all selcted features according to standid and extract featureId of the first.
-        selectedTuples = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.selectedFeaturesIterator()]
-        if len(selectedTuples):
-            selectedTuples.sort(key = self.stand_sort)
-            fid = selectedTuples[0].fid
-            # Find index
-            result = next((i for i, t in enumerate(self.layerFeatureIds) if t.fid == fid), None)
-            if result != None:
-                self.layerFeatureIdx = result            
+        self.layerSelectedIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.selectedFeaturesIterator()]
+        # Activate buttons if more than one selected feature
+        if len(self.layerSelectedIds) > 1:
+            self.dockwidget.pbPrevSelected.show()
+            self.dockwidget.pbNextSelected.show()
+        else:
+            self.dockwidget.pbPrevSelected.hide()
+            self.dockwidget.pbNextSelected.hide()
+
+        if len(self.layerSelectedIds):
+            self.layerSelectedIds.sort(key = self.stand_sort)
+            self.layerSelectedIdx = 0
+            # Find index in alla feature list
+            if self.feature_idx_from_selected_idx() != None:
                 # Update dock widget without changing selection
                 self.update_active_feature(change_selection = False)
                 return
         self.update_active_feature(change_selection = True)
-        
+
     def run(self):
         """Run method that loads and starts the plugin"""
 
@@ -396,3 +447,5 @@ class StandBrowser:
             self.dockwidget.leActive.editingFinished.connect(self.le_find_stand)
             self.dockwidget.pbNext.clicked.connect(self.pb_next_stand)
             self.dockwidget.pbPrev.clicked.connect(self.pb_prev_stand)
+            self.dockwidget.pbNextSelected.clicked.connect(self.pb_next_selected_stand)
+            self.dockwidget.pbPrevSelected.clicked.connect(self.pb_prev_selected_stand)
