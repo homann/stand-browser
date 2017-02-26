@@ -48,7 +48,7 @@ PY_FILES = \
 
 UI_FILES = stand_browser_dockwidget_base.ui
 
-EXTRAS = metadata.txt icon.png
+EXTRAS = metadata.txt StandBrowser.png
 
 EXTRA_DIRS =
 

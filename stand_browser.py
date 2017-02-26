@@ -184,7 +184,7 @@ class StandBrowser:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/StandBrowser/icon.png'
+        icon_path = ':/plugins/StandBrowser/StandBrowser.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Open browser...'),

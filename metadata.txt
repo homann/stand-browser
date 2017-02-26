@@ -8,13 +8,13 @@
 
 [general]
 name=Stand Browser
-qgisMinimumVersion=2.12
+qgisMinimumVersion=2.18
 description=Browse forests stand
 version=0.1
 author=Magnus Homann
 email=magnus@homann.se
 
-about=Browse forest stands for easy viewing
+about=Browse forest stands for easy viewing, icon from <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 tracker=https://github.com/homann/stand-browser/issues
 repository=https://github.com/homann/stand-browser
@@ -30,7 +30,7 @@ tags=forestry
 
 homepage=https://github.com/homann/stand-browser
 category=Vector
-icon=icon.png
+icon=StandBrowser.png
 # experimental flag
 experimental=True
 
