@@ -35,6 +35,7 @@ from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
 from collections import namedtuple
 import re
 from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
@@ -85,6 +86,7 @@ class StandBrowser:
         self.dockwidget = None
 
         self.layer = None
+        self.layerId = None
         self.layerFeatureIds = []
         self.layerSelectedIds = []
         self.layerFeatureIdx = 0
@@ -207,6 +209,9 @@ class StandBrowser:
             self.dockwidget.pbPrevSelected.clicked.disconnect(self.pb_prev_selected_stand)
             self.layer.selectionChanged.disconnect(self.set_from_external_selection)
             self.layer = None
+
+        QgsMapLayerRegistry.instance().layersAdded.disconnect(self.update_layer_list)
+        QgsMapLayerRegistry.instance().layersRemoved.disconnect(self.update_layer_list)
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
         # remove this statement if dockwidget is to remain
         # for reuse if plugin is reopened
@@ -238,7 +243,7 @@ class StandBrowser:
         
         if x == NULL:
             return ""
-        elif type(x) is int:
+        elif type(x) is int or type(x) is long:
             return str(x)
         elif type(x) is float:
             return locale.str(x)
@@ -265,11 +270,14 @@ class StandBrowser:
     def update_active_layer(self):
         """Select active layer from the layer selector"""
 
-        # Disconnect from old layer
-        if self.layer != None:
+        # If we had a layer, it was removed
+        #if self.layer != None:
             # Needs more disconnects?
-            self.layer.selectionChanged.disconnect(self.set_from_external_selection)
-            
+            # self.layer.selectionChanged.disconnect(self.set_from_external_selection)
+
+
+        self.layer = None
+        self.layerId = None
         self.layerFeatureIds = []
         self.layerSelectedIds = []
         self.layerFeatureIdx = 0
@@ -278,13 +286,18 @@ class StandBrowser:
 
         layer_idx = self.dockwidget.cbLayer.currentIndex()
         if layer_idx < 0:
+            for c in self.dockwidget.findChildren((QLineEdit, QDateEdit, QPLainTextEdit)):
+                c.clear()
             return
-        layer_id = self.dockwidget.cbLayer.itemData(layer_idx)
-        self.layer = QgsMapLayerRegistry.instance().mapLayer(layer_id)
+        else:
+            self.dockwidget.setEnabled(True)
+        self.layerId = self.dockwidget.cbLayer.itemData(layer_idx)
+        self.layer = QgsMapLayerRegistry.instance().mapLayer(self.layerId)
         self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.getFeatures()]
         self.layerFeatureIds.sort(key = self.stand_sort)
         # Connect updates on selection changes. Should we disconnect somehow when layer changes?
         self.layer.selectionChanged.connect(self.set_from_external_selection)
+        self.set_from_external_selection()
         
     def le_find_stand(self):
         result = next((i for i, t in enumerate(self.layerFeatureIds) if t.standid == self.dockwidget.leActive.text()), None)
@@ -384,6 +397,8 @@ class StandBrowser:
     def set_from_external_selection(self):
         """Change viewed stand according to external change to selection"""
 
+        if self.layer is None:
+            return
         # If nothing is selected, no change. Otherwise set to first selected
         # Sort all selcted features according to standid and extract featureId of the first.
         self.layerSelectedIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.selectedFeaturesIterator()]
@@ -405,15 +420,37 @@ class StandBrowser:
                 return
         self.update_active_feature(change_selection = True)
 
+    def update_layer_list(self):
+        """Set the list of available layers"""
+        
+        layers = QgsMapLayerRegistry.instance().mapLayers()
+        self.dockwidget.cbLayer.clear()
+        for layer_id, layer in layers.iteritems():
+            # Check if the layer is a vector layer and
+            # includes a 'standid' field
+            if layer.type() == QgsMapLayer.VectorLayer:
+                for f in layer.fields():
+                    if f.name() == 'standid':
+                        self.dockwidget.cbLayer.addItem(layer.name(), layer_id)
+                        break
+
+        # If we already are connected to a layer, check if the layer is still there.
+        # If so, stay with the same layer. Possibly changing index in the combo box
+        if self.layer != None:
+            for i in range(self.dockwidget.cbLayer.count()):
+                if self.layerId == self.dockwidget.cbLayer.itemData(i):
+                    self.dockwidget.cbLayer.setCurrentIndex(i)
+                    break
+        self.update_active_layer()
+
+        
     def run(self):
         """Run method that loads and starts the plugin"""
 
         self.layer = None
-        
+
         if not self.pluginIsActive:
             self.pluginIsActive = True
-
-            #print "** STARTING StandBrowser"
 
             # dockwidget may not exist if:
             #    first run of plugin
@@ -430,18 +467,7 @@ class StandBrowser:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
-            layers = self.iface.legendInterface().layers()
-            self.dockwidget.cbLayer.clear()
-            for layer in layers:
-                # Check if the layer is a vector layer and
-                # includes a 'standid' field
-                if layer.type() == QgsMapLayer.VectorLayer:
-                    for f in layer.fields():
-                        if f.name() == 'standid':
-                            self.dockwidget.cbLayer.addItem(layer.name(), layer.id())
-                            break
-            self.update_active_layer()
-            self.set_from_external_selection()
+            self.update_layer_list()
 
             # Connect signals from buttons in widget
             self.dockwidget.leActive.editingFinished.connect(self.le_find_stand)
@@ -449,3 +475,7 @@ class StandBrowser:
             self.dockwidget.pbPrev.clicked.connect(self.pb_prev_stand)
             self.dockwidget.pbNextSelected.clicked.connect(self.pb_next_selected_stand)
             self.dockwidget.pbPrevSelected.clicked.connect(self.pb_prev_selected_stand)
+            self.dockwidget.cbLayer.currentIndexChanged.connect(self.update_active_layer)
+            QgsMapLayerRegistry.instance().layersAdded.connect(self.update_layer_list)
+            QgsMapLayerRegistry.instance().layersRemoved.connect(self.update_layer_list)
+            
