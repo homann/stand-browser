@@ -286,7 +286,7 @@ class StandBrowser:
 
         layer_idx = self.dockwidget.cbLayer.currentIndex()
         if layer_idx < 0:
-            for c in self.dockwidget.findChildren((QLineEdit, QDateEdit, QPLainTextEdit)):
+            for c in self.dockwidget.findChildren((QLineEdit, QDateEdit, QPlainTextEdit)):
                 c.clear()
             return
         else:
@@ -335,7 +335,7 @@ class StandBrowser:
         
         # Change selection to new feature(?)
         if change_selection:
-            self.layer.setSelectedFeatures([self.layerFeatureIds[self.layerFeatureIdx].fid])
+            self.layer.selectByIds([self.layerFeatureIds[self.layerFeatureIdx].fid])
             self.layerSelectedIds = [self.layerFeatureIds[self.layerFeatureIdx]]
             self.layerSelectedIds = 0
 
