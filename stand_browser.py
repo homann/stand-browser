@@ -41,7 +41,8 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 StandTuple = namedtuple('StandTuple', ['fid', 'standid'])
-    
+
+
 class StandBrowser:
     """QGIS Plugin Implementation."""
 
@@ -80,7 +81,7 @@ class StandBrowser:
         self.toolbar = self.iface.addToolBar(u'StandBrowser')
         self.toolbar.setObjectName(u'StandBrowser')
 
-        #print "** INITIALIZING StandBrowser"
+        # print "** INITIALIZING StandBrowser"
 
         self.pluginIsActive = False
         self.dockwidget = None
@@ -92,7 +93,7 @@ class StandBrowser:
         self.layerFeatureIdx = 0
         self.layerSelectedIdx = 0
         self.layerActiveFeature = None
-        
+
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -107,7 +108,6 @@ class StandBrowser:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('StandBrowser', message)
-
 
     def add_action(
         self,
@@ -182,7 +182,6 @@ class StandBrowser:
 
         return action
 
-
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
@@ -193,25 +192,31 @@ class StandBrowser:
             callback=self.run,
             parent=self.iface.mainWindow())
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
 
-        #print "** CLOSING StandBrowser"
+        # print "** CLOSING StandBrowser"
 
         # disconnects
-        if self.layer != None:
-            self.dockwidget.leActive.editingFinished.disconnect(self.le_find_stand)
+        if self.layer is not None:
+            self.dockwidget.leActive.editingFinished.disconnect(
+                self.le_find_stand)
             self.dockwidget.pbNext.clicked.disconnect(self.pb_next_stand)
             self.dockwidget.pbPrev.clicked.disconnect(self.pb_prev_stand)
-            self.dockwidget.pbNextSelected.clicked.disconnect(self.pb_next_selected_stand)
-            self.dockwidget.pbPrevSelected.clicked.disconnect(self.pb_prev_selected_stand)
-            self.layer.selectionChanged.disconnect(self.set_from_external_selection)
+            self.dockwidget.pbNextSelected.clicked.disconnect(
+                self.pb_next_selected_stand)
+            self.dockwidget.pbPrevSelected.clicked.disconnect(
+                self.pb_prev_selected_stand)
+            self.layer.selectionChanged.disconnect(
+                self.set_from_external_selection)
             self.layer = None
 
-        QgsMapLayerRegistry.instance().layersAdded.disconnect(self.update_layer_list)
-        QgsMapLayerRegistry.instance().layersRemoved.disconnect(self.update_layer_list)
+        QgsMapLayerRegistry.instance().layersAdded.disconnect(
+            self.update_layer_list)
+        QgsMapLayerRegistry.instance().layersRemoved.disconnect(
+            self.update_layer_list)
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
         # remove this statement if dockwidget is to remain
         # for reuse if plugin is reopened
@@ -221,11 +226,10 @@ class StandBrowser:
 
         self.pluginIsActive = False
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
-        #print "** UNLOAD StandBrowser"
+        # print "** UNLOAD StandBrowser"
 
         for action in self.actions:
             self.iface.removePluginVectorMenu(
@@ -235,12 +239,12 @@ class StandBrowser:
         # remove the toolbar
         del self.toolbar
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def print_value_locale(self, x):
         """ A fcuntion top generate a text string suitabel for displaying
         field values."""
-        
+
         if x == NULL:
             return ""
         elif type(x) is int or type(x) is long:
@@ -250,31 +254,32 @@ class StandBrowser:
         else:
             return x
 
-
     def stand_sort(self, stand_tuple):
         """Sorting algorithm for natural sort, inspired by
-        https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/ """
-        convert = lambda text: int(text) if text.isdigit() else text
-        return [ convert(c) for c in re.split('([0-9]+)', stand_tuple.standid) ]
-        
-    
+        https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/"""
+
+        def convert(text):
+            return int(text) if text.isdigit() else text
+
+        return [convert(c) for c in re.split('([0-9]+)', stand_tuple.standid)]
+
     def feature_idx_from_selected_idx(self):
-        """find index in the feture lsit from the current selected feature idx"""
+        """find index in the feture list from the current selected
+        feature idx"""
 
         fid = self.layerSelectedIds[self.layerSelectedIdx].fid
-        result = next((i for i, t in enumerate(self.layerFeatureIds) if t.fid == fid), None)
-        if result != None:
-            self.layerFeatureIdx = result            
+        result = next((i for i, t in enumerate(self.layerFeatureIds)
+                       if t.fid == fid), None)
+        if result is not None:
+            self.layerFeatureIdx = result
         return result
 
     def update_active_layer(self):
         """Select active layer from the layer selector"""
 
         # If we had a layer, it was removed
-        #if self.layer != None:
-            # Needs more disconnects?
-            # self.layer.selectionChanged.disconnect(self.set_from_external_selection)
-
+        # if self.layer != None:
+        #     self.layer.selectionChanged.disconnect(self.set_from_external_selection)
 
         self.layer = None
         self.layerId = None
@@ -286,57 +291,81 @@ class StandBrowser:
 
         layer_idx = self.dockwidget.cbLayer.currentIndex()
         if layer_idx < 0:
-            for c in self.dockwidget.findChildren((QLineEdit, QDateEdit, QPlainTextEdit)):
+            for c in self.dockwidget.findChildren((QLineEdit, QDateEdit,
+                                                   QPlainTextEdit)):
                 c.clear()
             return
         else:
             self.dockwidget.setEnabled(True)
         self.layerId = self.dockwidget.cbLayer.itemData(layer_idx)
         self.layer = QgsMapLayerRegistry.instance().mapLayer(self.layerId)
-        self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.getFeatures()]
-        self.layerFeatureIds.sort(key = self.stand_sort)
-        # Connect updates on selection changes. Should we disconnect somehow when layer changes?
-        self.layer.selectionChanged.connect(self.set_from_external_selection)
+        self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid'))
+                                for f in self.layer.getFeatures()]
+        self.layerFeatureIds.sort(key=self.stand_sort)
+        # Connect updates on selection changes. Should we disconnect
+        # somehow when layer changes?
+        self.layer.selectionChanged.connect(
+            self.set_from_external_selection)
         self.set_from_external_selection()
-        
+
     def le_find_stand(self):
-        result = next((i for i, t in enumerate(self.layerFeatureIds) if t.standid == self.dockwidget.leActive.text()), None)
-        if result != None:
+        result = next((i for i, t in enumerate(self.layerFeatureIds)
+                       if t.standid == self.dockwidget.leActive.text()), None)
+        if result is not None:
             self.layerFeatureIdx = result
         self.update_active_feature()
-    
-    def update_active_feature(self, change_selection = True):
+
+    def update_active_feature(self, change_selection=True):
         """Update active feature from feature index"""
 
         # Update new feature pointer
         feature_id = self.layerFeatureIds[self.layerFeatureIdx].fid
-        f = next(self.layer.getFeatures(QgsFeatureRequest().setFilterFid(feature_id)))
+        f = next(self.layer.getFeatures(
+            QgsFeatureRequest().setFilterFid(feature_id)))
         self.layerActiveFeature = f
 
         # Show info about the feature/stand in docked widget.
-        self.dockwidget.leActive.setText(self.layerFeatureIds[self.layerFeatureIdx].standid)
-        self.dockwidget.leMaturity.setText(self.print_value_locale(f.attribute('maturitycl')))
-        self.dockwidget.leManage.setText(self.print_value_locale(f.attribute('managecl')))
-        self.dockwidget.leArea.setText(self.print_value_locale(f.attribute('prodarea')))
-        self.dockwidget.leAge.setText(self.print_value_locale(f.attribute('meanage')))
-        self.dockwidget.leVolume.setText(self.print_value_locale(f.attribute('v')))
-        self.dockwidget.leSi.setText(self.print_value_locale(f.attribute('sispecie'))+self.print_value_locale(f.attribute('sis')))
-        species = self.print_value_locale(f.attribute('ppine')) + self.print_value_locale(f.attribute('pspruce'))
-        species = species + self.print_value_locale(f.attribute('pbroadleaf')) + self.print_value_locale(f.attribute('pbirch'))
-        species = species + self.print_value_locale(f.attribute('pdeciduous'))
+        self.dockwidget.leActive.setText(
+            self.layerFeatureIds[self.layerFeatureIdx].standid)
+        self.dockwidget.leMaturity.setText(
+            self.print_value_locale(f.attribute('maturitycl')))
+        self.dockwidget.leManage.setText(
+            self.print_value_locale(f.attribute('managecl')))
+        self.dockwidget.leArea.setText(
+            self.print_value_locale(f.attribute('prodarea')))
+        self.dockwidget.leAge.setText(
+            self.print_value_locale(f.attribute('meanage')))
+        self.dockwidget.leVolume.setText(
+            self.print_value_locale(f.attribute('v')))
+        self.dockwidget.leSi.setText(
+            self.print_value_locale(f.attribute('sispecie')) +
+            self.print_value_locale(f.attribute('sis')))
+        species = (self.print_value_locale(f.attribute('ppine')) +
+                   self.print_value_locale(f.attribute('pspruce')))
+        species = (species +
+                   self.print_value_locale(f.attribute('pbroadleaf')) +
+                   self.print_value_locale(f.attribute('pbirch')))
+        species = (species +
+                   self.print_value_locale(f.attribute('pdeciduous')))
         self.dockwidget.leSpecies.setText(species)
-        self.dockwidget.leCAI.setText(self.print_value_locale(f.attribute('cai')))
-        self.dockwidget.leDGV.setText(self.print_value_locale(f.attribute('dgv')))
+        self.dockwidget.leCAI.setText(self.print_value_locale(
+            f.attribute('cai')))
+        self.dockwidget.leDGV.setText(self.print_value_locale(
+            f.attribute('dgv')))
         self.dockwidget.leN.setText(self.print_value_locale(f.attribute('n')))
         self.dockwidget.leH.setText(self.print_value_locale(f.attribute('h')))
         self.dockwidget.leG.setText(self.print_value_locale(f.attribute('g')))
-        self.dockwidget.teComment.setPlainText(self.print_value_locale(f.attribute('comment')))
-        self.dockwidget.deUpdated.setDate(self.print_value_locale(f.attribute('updated')))
-        
+        self.dockwidget.teComment.setPlainText(self.print_value_locale(
+            f.attribute('comment')))
+        self.dockwidget.deUpdated.setDate(self.print_value_locale(
+            f.attribute('updated')))
+
         # Change selection to new feature(?)
         if change_selection:
-            self.layer.selectByIds([self.layerFeatureIds[self.layerFeatureIdx].fid])
-            self.layerSelectedIds = [self.layerFeatureIds[self.layerFeatureIdx]]
+            self.layer.selectByIds([self.layerFeatureIds[
+                self.layerFeatureIdx].fid])
+            self.layerSelectedIds = [self.layerFeatureIds[
+                self.layerFeatureIdx]]
             self.layerSelectedIds = 0
 
         # Pan and zoom to new feature
@@ -347,23 +376,22 @@ class StandBrowser:
             self.iface.mapCanvas().setExtent(selected_bb)
         self.iface.mapCanvas().refresh()
 
-    
     def pb_next_stand(self):
         """Find next stand in layer"""
 
-        self.layerFeatureIdx =  self.layerFeatureIdx + 1
+        self.layerFeatureIdx = self.layerFeatureIdx + 1
         if self.layerFeatureIdx == len(self.layerFeatureIds):
             self.layerFeatureIdx = 0
-            
+
         self.update_active_feature()
-        
+
     def pb_prev_stand(self):
         """Find previous stand in layer"""
 
-        self.layerFeatureIdx =  self.layerFeatureIdx - 1
+        self.layerFeatureIdx = self.layerFeatureIdx - 1
         if self.layerFeatureIdx < 0:
-            self.layerFeatureIdx = len(self.layerFeatureIds)-1
-            
+            self.layerFeatureIdx = len(self.layerFeatureIds) - 1
+
         self.update_active_feature()
 
     def pb_next_selected_stand(self):
@@ -372,27 +400,27 @@ class StandBrowser:
         if len(self.layerSelectedIds) == 0:
             # Nothing selected, just in case
             return
-        self.layerSelectedIdx =  self.layerSelectedIdx + 1
+        self.layerSelectedIdx = self.layerSelectedIdx + 1
         if self.layerSelectedIdx == len(self.layerSelectedIds):
             self.layerSelectedIdx = 0
 
         # Now we have the selected feature, find in all feature list
         self.feature_idx_from_selected_idx()
-        self.update_active_feature(change_selection = False)
-        
+        self.update_active_feature(change_selection=False)
+
     def pb_prev_selected_stand(self):
         """Find previous selected stand in layer"""
 
         if len(self.layerSelectedIds) == 0:
             # Nothing selected, just in case
             return
-        self.layerSelectedIdx =  self.layerSelectedIdx - 1
+        self.layerSelectedIdx = self.layerSelectedIdx - 1
         if self.layerSelectedIdx < 0:
-            self.layerSelectedIdx = len(self.layerSelectedIds)-1
+            self.layerSelectedIdx = len(self.layerSelectedIds) - 1
 
         # Now we have the selected feature, find in all feature list
         self.feature_idx_from_selected_idx()
-        self.update_active_feature(change_selection = False)
+        self.update_active_feature(change_selection=False)
 
     def set_from_external_selection(self):
         """Change viewed stand according to external change to selection"""
@@ -400,8 +428,11 @@ class StandBrowser:
         if self.layer is None:
             return
         # If nothing is selected, no change. Otherwise set to first selected
-        # Sort all selcted features according to standid and extract featureId of the first.
-        self.layerSelectedIds = [StandTuple(f.id(), f.attribute('standid')) for f in self.layer.selectedFeaturesIterator()]
+        # Sort all selcted features according to standid and
+        # extract featureId of the first.
+        self.layerSelectedIds = [StandTuple(f.id(), f.attribute('standid'))
+                                 for f in
+                                 self.layer.selectedFeaturesIterator()]
         # Activate buttons if more than one selected feature
         if len(self.layerSelectedIds) > 1:
             self.dockwidget.pbPrevSelected.show()
@@ -411,18 +442,18 @@ class StandBrowser:
             self.dockwidget.pbNextSelected.hide()
 
         if len(self.layerSelectedIds):
-            self.layerSelectedIds.sort(key = self.stand_sort)
+            self.layerSelectedIds.sort(key=self.stand_sort)
             self.layerSelectedIdx = 0
             # Find index in alla feature list
-            if self.feature_idx_from_selected_idx() != None:
+            if self.feature_idx_from_selected_idx() is not None:
                 # Update dock widget without changing selection
-                self.update_active_feature(change_selection = False)
+                self.update_active_feature(change_selection=False)
                 return
-        self.update_active_feature(change_selection = True)
+        self.update_active_feature(change_selection=True)
 
     def update_layer_list(self):
         """Set the list of available layers"""
-        
+
         layers = QgsMapLayerRegistry.instance().mapLayers()
         self.dockwidget.cbLayer.clear()
         for layer_id, layer in layers.iteritems():
@@ -434,16 +465,16 @@ class StandBrowser:
                         self.dockwidget.cbLayer.addItem(layer.name(), layer_id)
                         break
 
-        # If we already are connected to a layer, check if the layer is still there.
-        # If so, stay with the same layer. Possibly changing index in the combo box
-        if self.layer != None:
+        # If we already are connected to a layer, check if the layer
+        # is still there. If so, stay with the same layer. Possibly
+        # changing index in the combo box
+        if self.layer is not None:
             for i in range(self.dockwidget.cbLayer.count()):
                 if self.layerId == self.dockwidget.cbLayer.itemData(i):
                     self.dockwidget.cbLayer.setCurrentIndex(i)
                     break
         self.update_active_layer()
 
-        
     def run(self):
         """Run method that loads and starts the plugin"""
 
@@ -455,7 +486,7 @@ class StandBrowser:
             # dockwidget may not exist if:
             #    first run of plugin
             #    removed on close (see self.onClosePlugin method)
-            if self.dockwidget == None:
+            if self.dockwidget is None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = StandBrowserDockWidget()
 
@@ -470,12 +501,19 @@ class StandBrowser:
             self.update_layer_list()
 
             # Connect signals from buttons in widget
-            self.dockwidget.leActive.editingFinished.connect(self.le_find_stand)
-            self.dockwidget.pbNext.clicked.connect(self.pb_next_stand)
-            self.dockwidget.pbPrev.clicked.connect(self.pb_prev_stand)
-            self.dockwidget.pbNextSelected.clicked.connect(self.pb_next_selected_stand)
-            self.dockwidget.pbPrevSelected.clicked.connect(self.pb_prev_selected_stand)
-            self.dockwidget.cbLayer.currentIndexChanged.connect(self.update_active_layer)
-            QgsMapLayerRegistry.instance().layersAdded.connect(self.update_layer_list)
-            QgsMapLayerRegistry.instance().layersRemoved.connect(self.update_layer_list)
-            
+            self.dockwidget.leActive.editingFinished.connect(
+                self.le_find_stand)
+            self.dockwidget.pbNext.clicked.connect(
+                self.pb_next_stand)
+            self.dockwidget.pbPrev.clicked.connect(
+                self.pb_prev_stand)
+            self.dockwidget.pbNextSelected.clicked.connect(
+                self.pb_next_selected_stand)
+            self.dockwidget.pbPrevSelected.clicked.connect(
+                self.pb_prev_selected_stand)
+            self.dockwidget.cbLayer.currentIndexChanged.connect(
+                self.update_active_layer)
+            QgsMapLayerRegistry.instance().layersAdded.connect(
+                self.update_layer_list)
+            QgsMapLayerRegistry.instance().layersRemoved.connect(
+                self.update_layer_list)
