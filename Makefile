@@ -31,8 +31,7 @@ LOCALES = StandBrowser_sv
 # If locales are enabled, set the name of the lrelease binary on your system. If
 # you have trouble compiling the translations, you may have to specify the full path to
 # lrelease
-#LRELEASE = lrelease
-LRELEASE = lrelease-qt4
+LRELEASE = lrelease
 
 
 # translation

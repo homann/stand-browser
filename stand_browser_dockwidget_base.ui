@@ -7,8 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>387</width>
-    <height>725</height>
+    <height>587</height>
    </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Stand Browser</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
@@ -27,85 +30,105 @@
       <property name="labelAlignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="lblMaturity">
         <property name="text">
          <string>Maturity Class</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QLineEdit" name="leMaturity">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="lblManage">
         <property name="text">
          <string>Manage Class</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="leManage"/>
+      <item row="5" column="1">
+       <widget class="QLineEdit" name="leManage">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="lblSi">
         <property name="text">
          <string>Stand Index</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="leSi"/>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="lblArea">
-        <property name="text">
-         <string>Area</string>
-        </property>
-       </widget>
-      </item>
       <item row="6" column="1">
-       <widget class="QLineEdit" name="leArea">
+       <widget class="QLineEdit" name="leSi">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="7" column="0">
+       <widget class="QLabel" name="lblArea">
+        <property name="text">
+         <string>Area</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="leArea">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="lblAge">
         <property name="text">
          <string>Age</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
-       <widget class="QLineEdit" name="leAge"/>
+      <item row="8" column="1">
+       <widget class="QLineEdit" name="leAge">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="8" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="lblVolume">
         <property name="text">
          <string>Volume</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
-       <widget class="QLineEdit" name="leVolume"/>
+      <item row="9" column="1">
+       <widget class="QLineEdit" name="leVolume">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="9" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="lblSpecies">
         <property name="text">
          <string>PSLBD</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
-       <widget class="QLineEdit" name="leSpecies"/>
+      <item row="10" column="1">
+       <widget class="QLineEdit" name="leSpecies">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="10" column="0">
+      <item row="11" column="0">
        <widget class="QLabel" name="lblCAI">
         <property name="text">
          <string>Annual Increment</string>
@@ -115,40 +138,59 @@
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
-       <widget class="QLineEdit" name="leCAI"/>
+      <item row="11" column="1">
+       <widget class="QLineEdit" name="leCAI">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="11" column="0">
+      <item row="12" column="0">
        <widget class="QLabel" name="lblDGV">
         <property name="text">
          <string>Diameter</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
-       <widget class="QLineEdit" name="leDGV"/>
+      <item row="12" column="1">
+       <widget class="QLineEdit" name="leDGV">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="12" column="0">
+      <item row="13" column="0">
        <widget class="QLabel" name="lblN">
         <property name="text">
          <string>Stems</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
-       <widget class="QLineEdit" name="leN"/>
+      <item row="13" column="1">
+       <widget class="QLineEdit" name="leN">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="13" column="0">
+      <item row="14" column="0">
        <widget class="QLabel" name="lblH">
         <property name="text">
          <string>Height</string>
         </property>
        </widget>
       </item>
-      <item row="13" column="1">
-       <widget class="QLineEdit" name="leH"/>
+      <item row="14" column="1">
+       <widget class="QLineEdit" name="leH">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="15" column="0">
+      <item row="16" column="0">
        <widget class="QLabel" name="lblUpdated">
         <property name="enabled">
          <bool>true</bool>
@@ -158,13 +200,17 @@
         </property>
        </widget>
       </item>
-      <item row="15" column="1">
+      <item row="16" column="1">
        <widget class="QDateEdit" name="deUpdated"/>
       </item>
-      <item row="14" column="1">
-       <widget class="QLineEdit" name="leG"/>
+      <item row="15" column="1">
+       <widget class="QLineEdit" name="leG">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
-      <item row="14" column="0">
+      <item row="15" column="0">
        <widget class="QLabel" name="lblG">
         <property name="text">
          <string>Basal Area</string>
@@ -188,10 +234,35 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="leActive">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit{ background: rgb(255, 255, 195);  }</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lblActive">
+        <property name="text">
+         <string>Stand ID</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="3" column="0" colspan="4">
-     <widget class="QPlainTextEdit" name="teComment"/>
+     <widget class="QPlainTextEdit" name="teComment">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="5" column="0" colspan="4">
      <layout class="QGridLayout" name="glActive">
@@ -213,16 +284,9 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLineEdit" name="leActive">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+       <widget class="QPushButton" name="pbHelp">
+        <property name="text">
+         <string>Help...</string>
         </property>
        </widget>
       </item>

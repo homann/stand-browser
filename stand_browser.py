@@ -24,6 +24,7 @@ from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from PyQt4.QtGui import QAction, QIcon
 # Initialize Qt resources from file resources.py
 import resources
+import qgis.utils
 
 # Import the code for the DockWidget
 from stand_browser_dockwidget import StandBrowserDockWidget
@@ -422,6 +423,12 @@ class StandBrowser:
         self.feature_idx_from_selected_idx()
         self.update_active_feature(change_selection=False)
 
+    def pb_help(self):
+        """Displays a help window"""
+
+        print "Starting help..."
+        qgis.utils.showPluginHelp(filename='help/build/html/index')
+
     def set_from_external_selection(self):
         """Change viewed stand according to external change to selection"""
 
@@ -503,6 +510,8 @@ class StandBrowser:
             # Connect signals from buttons in widget
             self.dockwidget.leActive.editingFinished.connect(
                 self.le_find_stand)
+            self.dockwidget.pbHelp.clicked.connect(
+                self.pb_help)
             self.dockwidget.pbNext.clicked.connect(
                 self.pb_next_stand)
             self.dockwidget.pbPrev.clicked.connect(

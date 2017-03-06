@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Stand Browser - forestry in QGIS &mdash; StandBrowser 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="StandBrowser 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">StandBrowser 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="stand-browser-forestry-in-qgis">
+<h1>Stand Browser - forestry in QGIS<a class="headerlink" href="#stand-browser-forestry-in-qgis" title="Permalink to this headline">¶</a></h1>
+<p>I have for a long time used QGIS to store and view my forestry
+data. For almost as long time, I&#8217;ve been thinking about adapting QGIS
+to work better with forestry. There are mainly three areas I would
+like to improve:</p>
+<ul class="simple">
+<li>Easy viewing of stand data</li>
+<li>Caclulating stand data from observations</li>
+<li>Yearly update of growth</li>
+</ul>
+<p>This is the first step.</p>
+</div>
+<div class="section" id="data-format">
+<h1>Data format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h1>
+<p>The plugin assumes the data is stored in a vector data set. The field names
+must follow the description below. It is modelled after how the
+Heureka data model of the SLU stores its data.</p>
+</div>
+<div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p>In the drop-down menu at the top of the dock window, all available
+vector layers that contains the required <tt class="docutils literal"><span class="pre">standid</span></tt> field are
+shown. Select the layer you want to browse here.</p>
+<p>Pushing the buttons Next and Prev shows infrormation about the next
+and previous stand in the window. If any fields are missing in the
+vector layer, it is shown as blank. These buttons also change the
+current selection in the layer, and pans/zooms to the newly selected
+stand.</p>
+<p>If you select - e.g. with the mouse or in the QGIS attribute table -
+more than one stand a new set of buttons appear. They are Next
+Selected and Prev Selected respectively. Pushing those buttons loops
+through the selected stands, but <em>does not</em> change the selection.</p>
+<p>The yellow background in the <tt class="docutils literal"><span class="pre">Stand</span> <span class="pre">ID</span></tt> field indicates that it is
+editable. Writing the name of a stand and hiting return, searches for
+that stand and displays it. If no such stand is found, the field is
+reset to last valid stand.</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Stand Browser - forestry in QGIS</a></li>
+<li><a class="reference internal" href="#data-format">Data format</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">StandBrowser 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Magnus Homann.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
