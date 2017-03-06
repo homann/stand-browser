@@ -3,10 +3,44 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to StandBrowser's documentation!
+Stand Browser - forestry in QGIS 
 ============================================
 
-Contents:
+I have for a long time used QGIS to store and view my forestry
+data. For almost as long time, I've been thinking about adapting QGIS
+to work better with forestry. There are mainly three areas I would
+like to improve:
+
+* Easy viewing of stand data
+* Caclulating stand data from observations
+* Yearly update of growth
+
+This is the first step.
+
+Data format
+===========
+
+The plugin assumes the data is stored in a vector data set. The field names
+must follow the description below. It is modelled after how the
+Heureka data model of the SLU stores its data.
+
+Usage
+=====
+
+In the drop-down menu at the top of the dock window, all available
+vector layers that contains the required ``standid`` field are
+shown. Select the layer you want to browse here.
+
+Pushing the buttons Next and Prev shows infrormation about the next
+and previous stand in the window. If any fields are missing in the
+vector layer, it is shown as blank. These buttons also change the
+current selection in the layer, and pans/zooms to the newly selected
+stand.
+
+If you select - e.g. with the mouse or in the QGIS attribute table -
+more than one stand a new set of buttons appear. They are Next
+Selected and Prev Selected respectively. Pushing those buttons loops
+through the selected stands, but *does not* change the selection.
 
 .. toctree::
    :maxdepth: 2

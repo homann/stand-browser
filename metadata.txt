@@ -10,7 +10,7 @@
 name=Stand Browser
 qgisMinimumVersion=2.18
 description=Browse forests stand
-version=0.1
+version=1.0
 author=Magnus Homann
 email=magnus@homann.se
 
@@ -26,13 +26,13 @@ repository=https://github.com/homann/stand-browser
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=forestry
+tags=forestry, Heureka, SLU, bestånd, skogsbruksplan, skogsplan
 
 homepage=https://github.com/homann/stand-browser
 category=Vector
 icon=StandBrowser.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
