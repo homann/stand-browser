@@ -58,7 +58,146 @@ like to improve:</p>
 <h1>Data format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h1>
 <p>The plugin assumes the data is stored in a vector data set. The field names
 must follow the description below. It is modelled after how the
-Heureka data model of the SLU stores its data.</p>
+Heureka data model of the SLU stores its data.
+See the <a class="reference external" href="http://heurekaslu.org/wiki/Main_Page">Heureka Wiki</a> for more info.
+Some filed names have been shortened, due to the 12 character limit of
+SHP-files.</p>
+<p>The fields and their data shall be UTF-8 encoded.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="10%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Fält</th>
+<th class="head">Typ</th>
+<th class="head">Beskrivning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>standid</td>
+<td>string</td>
+<td>Valfri identifierare, tex &#8216;12&#8217;</td>
+</tr>
+<tr class="row-odd"><td>prodarea</td>
+<td>real</td>
+<td>Produktiv area [ha]</td>
+</tr>
+<tr class="row-even"><td>layer</td>
+<td>integer</td>
+<td>Beståndslager. Normalt = 1, överstandare/skärm = 2</td>
+</tr>
+<tr class="row-odd"><td>meanage</td>
+<td>integer</td>
+<td>Genomsnittsålder</td>
+</tr>
+<tr class="row-even"><td>maturitycl</td>
+<td>string</td>
+<td>Huggningsklass Ex: &#8216;R1&#8217; eller &#8216;S3&#8217;</td>
+</tr>
+<tr class="row-odd"><td>sispecie</td>
+<td>string</td>
+<td>Art för ståndortsindex. Ex: G24 → &#8216;G&#8217;</td>
+</tr>
+<tr class="row-even"><td>sis</td>
+<td>integer</td>
+<td>Höjd för ståndortsindex. Ex: G24-&gt; &#8216;24&#8217;</td>
+</tr>
+<tr class="row-odd"><td>v</td>
+<td>integer</td>
+<td>Volym [m3sk/ha]</td>
+</tr>
+<tr class="row-even"><td>managecl</td>
+<td>string</td>
+<td>Målklass Ex: &#8216;PG eller &#8216;NO&#8217;</td>
+</tr>
+<tr class="row-odd"><td>ppine</td>
+<td>string</td>
+<td>Andel tall i tiondelar Ex: &#8216;X&#8217; = 10/10</td>
+</tr>
+<tr class="row-even"><td>pspruce</td>
+<td>string</td>
+<td>-”- gran -”-</td>
+</tr>
+<tr class="row-odd"><td>pbroadleaf</td>
+<td>string</td>
+<td>-”- triviallöv -”-</td>
+</tr>
+<tr class="row-even"><td>pbirch</td>
+<td>string</td>
+<td>-”- björk -”-</td>
+</tr>
+<tr class="row-odd"><td>pdeciduous</td>
+<td>string</td>
+<td>-”- ädellöv -”-</td>
+</tr>
+<tr class="row-even"><td>paspen</td>
+<td>string</td>
+<td>-”- asp -”-</td>
+</tr>
+<tr class="row-odd"><td>poak</td>
+<td>string</td>
+<td>-”- ek -”-</td>
+</tr>
+<tr class="row-even"><td>pbeech</td>
+<td>string</td>
+<td>-”- bok -”-</td>
+</tr>
+<tr class="row-odd"><td>pcontorta</td>
+<td>string</td>
+<td>-”- contorta -”-</td>
+</tr>
+<tr class="row-even"><td>plarch</td>
+<td>string</td>
+<td>-”- lärk -”-</td>
+</tr>
+<tr class="row-odd"><td>dgv</td>
+<td>integer</td>
+<td>Medeldiameter, grundytevägd [cm]</td>
+</tr>
+<tr class="row-even"><td>comment</td>
+<td>string</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>cai</td>
+<td>real</td>
+<td>Årlig tillväxt [m3sk/ha]</td>
+</tr>
+<tr class="row-even"><td>h</td>
+<td>real</td>
+<td>Medelhöjd [m]</td>
+</tr>
+<tr class="row-odd"><td>n</td>
+<td>integer</td>
+<td>Stammantal [1/ha]</td>
+</tr>
+<tr class="row-even"><td>g</td>
+<td>real</td>
+<td>Grundyta [m2/ha]</td>
+</tr>
+<tr class="row-odd"><td>invdate</td>
+<td>date</td>
+<td>Datum för senaste inventering</td>
+</tr>
+<tr class="row-even"><td>invsource</td>
+<td>string</td>
+<td>Källa senaste inventering (valfri text)</td>
+</tr>
+<tr class="row-odd"><td>updated</td>
+<td>date</td>
+<td>Aktualitetsdatum (inventering, framskrivning, etc)</td>
+</tr>
+<tr class="row-even"><td>altitude</td>
+<td>integer</td>
+<td>Höjd över havet [m]</td>
+</tr>
+<tr class="row-odd"><td>countycode</td>
+<td>integer</td>
+<td>DLÄN-kod. Se <a class="reference external" href="http://heurekaslu.org/wiki/Variable:CountyCode">Heureka WIKI</a></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>

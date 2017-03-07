@@ -23,6 +23,49 @@ Data format
 The plugin assumes the data is stored in a vector data set. The field names
 must follow the description below. It is modelled after how the
 Heureka data model of the SLU stores its data.
+See the `Heureka Wiki <http://heurekaslu.org/wiki/Main_Page>`_ for more info.
+Some filed names have been shortened, due to the 12 character limit of
+SHP-files.
+
+The fields and their data shall be UTF-8 encoded.
+
+==========  =======     ==================================================
+Fält        Typ         Beskrivning
+==========  =======     ==================================================
+standid     string      Valfri identifierare, tex '12'
+prodarea    real        Produktiv area [ha]
+layer       integer     Beståndslager. Normalt = 1, överstandare/skärm = 2
+meanage	    integer	Genomsnittsålder
+maturitycl  string	Huggningsklass Ex: 'R1' eller 'S3'
+sispecie    string	Art för ståndortsindex. Ex: G24 → 'G'
+sis	    integer	Höjd för ståndortsindex. Ex: G24-> '24'
+v	    integer	Volym [m3sk/ha]
+managecl    string	Målklass Ex: 'PG eller 'NO'
+ppine	    string	Andel tall i tiondelar Ex: 'X' = 10/10
+pspruce	    string	 -”- gran -”-
+pbroadleaf  string	 -”- triviallöv -”-
+pbirch	    string	 -”- björk -”-
+pdeciduous  string	 -”- ädellöv -”-
+paspen	    string	 -”- asp -”-
+poak	    string	 -”- ek -”-
+pbeech	    string	 -”- bok -”-
+pcontorta   string	 -”- contorta -”-
+plarch	    string	 -”- lärk -”-
+dgv	    integer	Medeldiameter, grundytevägd [cm]
+comment	    string	
+cai	    real	Årlig tillväxt [m3sk/ha]
+h	    real	Medelhöjd [m]
+n	    integer	Stammantal [1/ha]
+g           real	Grundyta [m2/ha]
+invdate     date	Datum för senaste inventering
+invsource   string	Källa senaste inventering (valfri text)
+updated	    date	Aktualitetsdatum (inventering, framskrivning, etc)
+altitude    integer	Höjd över havet [m]
+countycode  integer	DLÄN-kod. Se `Heureka WIKI`__
+==========  =======     ==================================================
+
+__ http://heurekaslu.org/wiki/Variable:CountyCode
+
 
 Usage
 =====
