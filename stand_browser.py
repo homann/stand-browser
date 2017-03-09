@@ -242,7 +242,7 @@ class StandBrowser:
 
     # --------------------------------------------------------------------------
 
-    def print_value_locale(self, x):
+    def pretty_value(self, x):
         """ A fcuntion top generate a text string suitabel for displaying
         field values."""
 
@@ -255,6 +255,16 @@ class StandBrowser:
         else:
             return x
 
+    def pretty_field(self, field, novalue=''):
+        """ A funtion to generate a text string from the field
+        value in current layer"""
+
+        try:
+            txt = self.layerActiveFeature.attribute(field)
+        except KeyError:
+            return novalue;
+        return self.pretty_value(txt)
+    
     def stand_sort(self, stand_tuple):
         """Sorting algorithm for natural sort, inspired by
         https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/"""
@@ -329,37 +339,35 @@ class StandBrowser:
         self.dockwidget.leActive.setText(
             self.layerFeatureIds[self.layerFeatureIdx].standid)
         self.dockwidget.leMaturity.setText(
-            self.print_value_locale(f.attribute('maturitycl')))
+            self.pretty_field('maturitycl'))
         self.dockwidget.leManage.setText(
-            self.print_value_locale(f.attribute('managecl')))
+            self.pretty_field('managecl'))
         self.dockwidget.leArea.setText(
-            self.print_value_locale(f.attribute('prodarea')))
+            self.pretty_field('prodarea'))
         self.dockwidget.leAge.setText(
-            self.print_value_locale(f.attribute('meanage')))
+            self.pretty_field('meanage'))
         self.dockwidget.leVolume.setText(
-            self.print_value_locale(f.attribute('v')))
+            self.pretty_field('v'))
         self.dockwidget.leSi.setText(
-            self.print_value_locale(f.attribute('sispecie')) +
-            self.print_value_locale(f.attribute('sis')))
-        species = (self.print_value_locale(f.attribute('ppine')) +
-                   self.print_value_locale(f.attribute('pspruce')))
-        species = (species +
-                   self.print_value_locale(f.attribute('pbroadleaf')) +
-                   self.print_value_locale(f.attribute('pbirch')))
-        species = (species +
-                   self.print_value_locale(f.attribute('pdeciduous')))
-        self.dockwidget.leSpecies.setText(species)
-        self.dockwidget.leCAI.setText(self.print_value_locale(
-            f.attribute('cai')))
-        self.dockwidget.leDGV.setText(self.print_value_locale(
-            f.attribute('dgv')))
-        self.dockwidget.leN.setText(self.print_value_locale(f.attribute('n')))
-        self.dockwidget.leH.setText(self.print_value_locale(f.attribute('h')))
-        self.dockwidget.leG.setText(self.print_value_locale(f.attribute('g')))
-        self.dockwidget.teComment.setPlainText(self.print_value_locale(
-            f.attribute('comment')))
-        self.dockwidget.deUpdated.setDate(self.print_value_locale(
-            f.attribute('updated')))
+            self.pretty_field('sispecie') +
+            self.pretty_field('sis'))
+        self.dockwidget.leSpecies.setText(
+            self.pretty_field('ppine', '0') +
+            self.pretty_field('pspruce', '0') +
+            self.pretty_field('pbroadleaf', '0') +
+            self.pretty_field('pbirach', '0') +
+            self.pretty_field('pdeciduous', '0'))
+        self.dockwidget.leCAI.setText(
+            self.pretty_field('cai'))
+        self.dockwidget.leDGV.setText(
+            self.pretty_field('dgv'))
+        self.dockwidget.leN.setText(self.pretty_field('n'))
+        self.dockwidget.leH.setText(self.pretty_field('h'))
+        self.dockwidget.leG.setText(self.pretty_field('g'))
+        self.dockwidget.teComment.setPlainText(
+            self.pretty_field('comment'))
+        self.dockwidget.deUpdated.setDate(
+            self.pretty_field('updated'))
 
         # Change selection to new feature(?)
         if change_selection:
