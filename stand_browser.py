@@ -77,7 +77,7 @@ class StandBrowser:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Stand Browser')
+        self.menu = 'Stand Browser'
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'StandBrowser')
         self.toolbar.setObjectName(u'StandBrowser')
@@ -234,7 +234,7 @@ class StandBrowser:
 
         for action in self.actions:
             self.iface.removePluginVectorMenu(
-                self.tr(u'&Stand Browser'),
+                'Stand Browser',
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar

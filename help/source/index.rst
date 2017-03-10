@@ -90,6 +90,13 @@ editable. Writing the name of a stand and hiting return, searches for
 that stand and displays it. If no such stand is found, the field is
 reset to last valid stand.
 
+Example data
+============
+
+There is example data in the `.../example_data`__ directory.
+
+__ ../../../example_data
+
 
 .. toctree::
    :maxdepth: 2

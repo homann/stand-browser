@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="sv_SE">
+<!DOCTYPE TS><TS version="2.0" language="sv_SE" sourcelanguage="">
 <context>
     <name>@default</name>
     <message>
@@ -12,12 +11,7 @@
 <context>
     <name>StandBrowser</name>
     <message>
-        <location filename="stand_browser.py" line="235"/>
-        <source>&amp;Stand Browser</source>
-        <translation>&amp;Stand Browser</translation>
-    </message>
-    <message>
-        <location filename="stand_browser.py" line="189"/>
+        <location filename="stand_browser.py" line="190"/>
         <source>Open browser...</source>
         <translation>Öppna bläddrare...</translation>
     </message>

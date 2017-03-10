@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Stand Browser - forestry in QGIS &mdash; StandBrowser 0.1 documentation</title>
+    <title>Stand Browser - forestry in QGIS &#8212; StandBrowser 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -17,29 +17,31 @@
         VERSION:     '0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="StandBrowser 0.1 documentation" href="#" /> 
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">StandBrowser 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">StandBrowser 0.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="stand-browser-forestry-in-qgis">
 <h1>Stand Browser - forestry in QGIS<a class="headerlink" href="#stand-browser-forestry-in-qgis" title="Permalink to this headline">¶</a></h1>
@@ -158,7 +160,7 @@ SHP-files.</p>
 </tr>
 <tr class="row-even"><td>comment</td>
 <td>string</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
 <tr class="row-odd"><td>cai</td>
 <td>real</td>
@@ -202,7 +204,7 @@ SHP-files.</p>
 <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
 <p>In the drop-down menu at the top of the dock window, all available
-vector layers that contains the required <tt class="docutils literal"><span class="pre">standid</span></tt> field are
+vector layers that contains the required <code class="docutils literal"><span class="pre">standid</span></code> field are
 shown. Select the layer you want to browse here.</p>
 <p>Pushing the buttons Next and Prev shows infrormation about the next
 and previous stand in the window. If any fields are missing in the
@@ -213,21 +215,23 @@ stand.</p>
 more than one stand a new set of buttons appear. They are Next
 Selected and Prev Selected respectively. Pushing those buttons loops
 through the selected stands, but <em>does not</em> change the selection.</p>
-<p>The yellow background in the <tt class="docutils literal"><span class="pre">Stand</span> <span class="pre">ID</span></tt> field indicates that it is
+<p>The yellow background in the <code class="docutils literal"><span class="pre">Stand</span> <span class="pre">ID</span></code> field indicates that it is
 editable. Writing the name of a stand and hiting return, searches for
 that stand and displays it. If no such stand is found, the field is
 reset to last valid stand.</p>
+</div>
+<div class="section" id="example-data">
+<h1>Example data<a class="headerlink" href="#example-data" title="Permalink to this headline">¶</a></h1>
+<p>There is example data in the <a class="reference external" href="../../../example_data">.../example_data</a> directory.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 
@@ -235,50 +239,50 @@ reset to last valid stand.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Stand Browser - forestry in QGIS</a></li>
 <li><a class="reference internal" href="#data-format">Data format</a></li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#example-data">Example data</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">StandBrowser 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">StandBrowser 0.1 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2013, Magnus Homann.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Magnus Homann.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
     </div>
   </body>
 </html>
