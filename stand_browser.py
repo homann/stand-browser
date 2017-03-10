@@ -262,9 +262,9 @@ class StandBrowser:
         try:
             txt = self.layerActiveFeature.attribute(field)
         except KeyError:
-            return novalue;
+            return novalue
         return self.pretty_value(txt)
-    
+
     def stand_sort(self, stand_tuple):
         """Sorting algorithm for natural sort, inspired by
         https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/"""
