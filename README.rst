@@ -1,6 +1,6 @@
 `Help`_
 ============
-__ help/build/html/index.html
+__ blob/master/help/source/index.rst
 
 Changelog
 =========
