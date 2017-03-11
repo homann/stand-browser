@@ -4,17 +4,18 @@
 # embedding metadata in __init__.py will 
 # is no longer supported since version 2.0.
 
-# This file should be included when you package your plugin.# Mandatory items:
+# This file should be included when you package your plugin.
+# Mandatory items:
 
 [general]
 name=Stand Browser
 qgisMinimumVersion=2.18
-description=Browse forests stand
-version=1.0
+description=Browse forest stands
+version=1.0b
 author=Magnus Homann
 email=magnus@homann.se
 
-about=Browse forest stands for easy viewing. <div>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+about=Browse forest stands for easy viewing. See more in the plugin help. <div>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 tracker=https://github.com/homann/stand-browser/issues
 repository=https://github.com/homann/stand-browser
@@ -23,7 +24,10 @@ repository=https://github.com/homann/stand-browser
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-# changelog=
+# changelog=1.0b
+  - Added missing files in package. Sorry...
+  1.0
+  - First version
 
 # Tags are comma separated with spaces allowed
 tags=forestry, Heureka, SLU, bestånd, skogsbruksplan, skogsplan

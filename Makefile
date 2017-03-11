@@ -49,7 +49,7 @@ UI_FILES = stand_browser_dockwidget_base.ui
 
 EXTRAS = metadata.txt StandBrowser.png
 
-EXTRA_DIRS =
+EXTRA_DIRS = example_data
 
 COMPILED_RESOURCE_FILES = resources.py
 
@@ -110,9 +110,9 @@ deploy: compile doc transcompile
 	cp -vf $(COMPILED_RESOURCE_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	cp -vf $(EXTRAS) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	cp -vfr i18n $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
-	cp -vfr $(HELP) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/help
+	cp -vfr --parents $(HELP) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	# Copy extra directories if any
-  # (temporarily removed)
+	for x in $(EXTRA_DIRS); do cp -vfr --parents $$x $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME); done
 
 
 # The dclean target removes compiled python files from plugin directory
