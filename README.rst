@@ -1,6 +1,6 @@
 `Help`__
 ============
-__ blob/master/help/source/index.rst
+__ help/source/index.rst
 
 Changelog
 =========
