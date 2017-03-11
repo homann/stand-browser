@@ -1,4 +1,4 @@
-`Help`_
+`Help`__
 ============
 __ blob/master/help/source/index.rst
 
