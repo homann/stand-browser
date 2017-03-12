@@ -95,6 +95,9 @@ Example data
 
 There is example data in the `.../example_data`__ directory.
 
+It also contains a QML-file, that can be applied to the stand layer
+for a nice look.
+
 __ ../../../example_data
 
 
