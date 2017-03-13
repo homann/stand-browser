@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>387</width>
-    <height>587</height>
+    <height>706</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,6 +17,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="4" column="3">
      <widget class="QPushButton" name="pbNextSelected">
+      <property name="toolTip">
+       <string>Go to next of the selected stands</string>
+      </property>
       <property name="text">
        <string>Next Selected</string>
       </property>
@@ -39,6 +42,9 @@
       </item>
       <item row="4" column="1">
        <widget class="QLineEdit" name="leMaturity">
+        <property name="toolTip">
+         <string>E.g. K2, R2</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -53,6 +59,9 @@
       </item>
       <item row="5" column="1">
        <widget class="QLineEdit" name="leManage">
+        <property name="toolTip">
+         <string>E.g. NO, NS, PG</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -67,6 +76,9 @@
       </item>
       <item row="6" column="1">
        <widget class="QLineEdit" name="leSi">
+        <property name="toolTip">
+         <string>Specie and site index, e.g G28</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -81,6 +93,9 @@
       </item>
       <item row="7" column="1">
        <widget class="QLineEdit" name="leArea">
+        <property name="toolTip">
+         <string>Productive area [ha]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -95,6 +110,9 @@
       </item>
       <item row="8" column="1">
        <widget class="QLineEdit" name="leAge">
+        <property name="toolTip">
+         <string>Mean tree total age (basal area weighted) [year]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -109,6 +127,9 @@
       </item>
       <item row="9" column="1">
        <widget class="QLineEdit" name="leVolume">
+        <property name="toolTip">
+         <string>Standing volume [m3sk/ha]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -123,6 +144,9 @@
       </item>
       <item row="10" column="1">
        <widget class="QLineEdit" name="leSpecies">
+        <property name="toolTip">
+         <string>Tenths of each species, e.g. 08200 or X0000</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -140,6 +164,9 @@
       </item>
       <item row="11" column="1">
        <widget class="QLineEdit" name="leCAI">
+        <property name="toolTip">
+         <string>Annual volume increment [m3sk/ha]</string>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -157,6 +184,9 @@
       </item>
       <item row="12" column="1">
        <widget class="QLineEdit" name="leDGV">
+        <property name="toolTip">
+         <string>Mean diameter (basal area weighted)[cm]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -171,6 +201,9 @@
       </item>
       <item row="13" column="1">
        <widget class="QLineEdit" name="leN">
+        <property name="toolTip">
+         <string>Stem density [1/ha]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -185,6 +218,9 @@
       </item>
       <item row="14" column="1">
        <widget class="QLineEdit" name="leH">
+        <property name="toolTip">
+         <string>Mean height (basal area weighted) [m] </string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -201,10 +237,17 @@
        </widget>
       </item>
       <item row="16" column="1">
-       <widget class="QDateEdit" name="deUpdated"/>
+       <widget class="QDateEdit" name="deUpdated">
+        <property name="toolTip">
+         <string>Date last updated</string>
+        </property>
+       </widget>
       </item>
       <item row="15" column="1">
        <widget class="QLineEdit" name="leG">
+        <property name="toolTip">
+         <string>Basal area [m2/ha]</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -225,7 +268,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="cbLayer"/>
+       <widget class="QComboBox" name="cbLayer">
+        <property name="toolTip">
+         <string>Select active layer</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0" colspan="2">
        <widget class="Line" name="line">
@@ -243,6 +290,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Stand identification</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QLineEdit{ background: rgb(255, 255, 195);  }</string>
         </property>
@@ -259,6 +309,9 @@
     </item>
     <item row="3" column="0" colspan="4">
      <widget class="QPlainTextEdit" name="teComment">
+      <property name="toolTip">
+       <string>Optional comment</string>
+      </property>
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -271,6 +324,9 @@
       </property>
       <item row="4" column="0">
        <widget class="QPushButton" name="pbPrev">
+        <property name="toolTip">
+         <string>Go to previous stand</string>
+        </property>
         <property name="text">
          <string>Prev</string>
         </property>
@@ -278,6 +334,9 @@
       </item>
       <item row="4" column="2">
        <widget class="QPushButton" name="pbNext">
+        <property name="toolTip">
+         <string>Go to next stand</string>
+        </property>
         <property name="text">
          <string>Next</string>
         </property>
@@ -285,6 +344,9 @@
       </item>
       <item row="4" column="1">
        <widget class="QPushButton" name="pbHelp">
+        <property name="toolTip">
+         <string>Open help in browser</string>
+        </property>
         <property name="text">
          <string>Help...</string>
         </property>
@@ -294,6 +356,9 @@
     </item>
     <item row="4" column="0">
      <widget class="QPushButton" name="pbPrevSelected">
+      <property name="toolTip">
+       <string>Go to previous of the selected stands</string>
+      </property>
       <property name="text">
        <string>Prev Selected</string>
       </property>
