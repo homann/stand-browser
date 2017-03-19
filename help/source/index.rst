@@ -74,7 +74,7 @@ In the drop-down menu at the top of the dock window, all available
 vector layers that contains the required ``standid`` field are
 shown. Select the layer you want to browse here.
 
-Pushing the buttons Next and Prev shows infrormation about the next
+Pushing the buttons Next and Prev shows information about the next
 and previous stand in the window. If any fields are missing in the
 vector layer, it is shown as blank. These buttons also change the
 current selection in the layer, and pans/zooms to the newly selected
@@ -85,10 +85,10 @@ more than one stand a new set of buttons appear. They are Next
 Selected and Prev Selected respectively. Pushing those buttons loops
 through the selected stands, but *does not* change the selection.
 
-The yellow background in the ``Stand ID`` field indicates that it is
-editable. Writing the name of a stand and hiting return, searches for
-that stand and displays it. If no such stand is found, the field is
-reset to last valid stand.
+Next to the ``Stand ID`` field, there's a field with yellow background
+and search icon next to it. Writing the name of a stand and hitting return
+or the search icon, searches for that stand and displays it. If no such
+stand is found, nothing happens.
 
 Example data
 ============

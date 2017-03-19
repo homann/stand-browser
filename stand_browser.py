@@ -32,6 +32,7 @@ import os.path
 
 # Import various QGIs classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
+from qgis.core import QgsApplication
 
 from collections import namedtuple
 import re
@@ -204,8 +205,8 @@ class StandBrowser:
         if self.layer is not None:
             self.dockwidget.leActive.editingFinished.disconnect(
                 self.le_find_stand)
-            self.dockwidget.pbNext.clicked.disconnect(self.pb_next_stand)
-            self.dockwidget.pbPrev.clicked.disconnect(self.pb_prev_stand)
+            self.dockwidget.tbNext.clicked.disconnect(self.pb_next_stand)
+            self.dockwidget.tbPrev.clicked.disconnect(self.pb_prev_stand)
             self.dockwidget.pbNextSelected.clicked.disconnect(
                 self.pb_next_selected_stand)
             self.dockwidget.pbPrevSelected.clicked.disconnect(
@@ -321,7 +322,7 @@ class StandBrowser:
 
     def le_find_stand(self):
         result = next((i for i, t in enumerate(self.layerFeatureIds)
-                       if t.standid == self.dockwidget.leActive.text()), None)
+                       if t.standid == self.dockwidget.leSearch.text()), None)
         if result is not None:
             self.layerFeatureIdx = result
         self.update_active_feature()
@@ -513,16 +514,28 @@ class StandBrowser:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
+            # Set QGIS icons for the buttons
+            self.dockwidget.tbNext.setIcon(
+                QgsApplication.getThemeIcon( "/mActionAtlasNext.svg" ) )
+            self.dockwidget.tbPrev.setIcon(
+                QgsApplication.getThemeIcon( "/mActionAtlasPrev.svg" ) )
+            self.dockwidget.tbHelp.setIcon(
+                QgsApplication.getThemeIcon( "/mActionHelpContents.svg" ) )
+            self.dockwidget.tbSearch.setIcon(
+                QgsApplication.getThemeIcon( "/mIconZoom.svg" ) )
+            
             self.update_layer_list()
-
+            
             # Connect signals from buttons in widget
-            self.dockwidget.leActive.editingFinished.connect(
+            self.dockwidget.tbSearch.clicked.connect(
                 self.le_find_stand)
-            self.dockwidget.pbHelp.clicked.connect(
+            self.dockwidget.leSearch.returnPressed.connect(
+                self.le_find_stand)
+            self.dockwidget.tbHelp.clicked.connect(
                 self.pb_help)
-            self.dockwidget.pbNext.clicked.connect(
+            self.dockwidget.tbNext.clicked.connect(
                 self.pb_next_stand)
-            self.dockwidget.pbPrev.clicked.connect(
+            self.dockwidget.tbPrev.clicked.connect(
                 self.pb_prev_stand)
             self.dockwidget.pbNextSelected.clicked.connect(
                 self.pb_next_selected_stand)
