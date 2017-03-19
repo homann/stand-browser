@@ -516,16 +516,16 @@ class StandBrowser:
 
             # Set QGIS icons for the buttons
             self.dockwidget.tbNext.setIcon(
-                QgsApplication.getThemeIcon( "/mActionAtlasNext.svg" ) )
+                QgsApplication.getThemeIcon("/mActionAtlasNext.svg"))
             self.dockwidget.tbPrev.setIcon(
-                QgsApplication.getThemeIcon( "/mActionAtlasPrev.svg" ) )
+                QgsApplication.getThemeIcon("/mActionAtlasPrev.svg"))
             self.dockwidget.tbHelp.setIcon(
-                QgsApplication.getThemeIcon( "/mActionHelpContents.svg" ) )
+                QgsApplication.getThemeIcon("/mActionHelpContents.svg"))
             self.dockwidget.tbSearch.setIcon(
-                QgsApplication.getThemeIcon( "/mIconZoom.svg" ) )
-            
+                QgsApplication.getThemeIcon("/mIconZoom.svg"))
+
             self.update_layer_list()
-            
+
             # Connect signals from buttons in widget
             self.dockwidget.tbSearch.clicked.connect(
                 self.le_find_stand)
