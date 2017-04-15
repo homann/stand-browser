@@ -37,15 +37,15 @@ LRELEASE = lrelease
 # translation
 SOURCES = \
 	__init__.py \
-	stand_browser.py stand_browser_dockwidget.py
+	stand_browser.py stand_browser_dockwidget.py stand_browser_toolboxwidget.py
 
 PLUGINNAME = StandBrowser
 
 PY_FILES = \
 	__init__.py \
-	stand_browser.py stand_browser_dockwidget.py
+	stand_browser.py stand_browser_dockwidget.py stand_browser_toolboxwidget.py
 
-UI_FILES = stand_browser_dockwidget_base.ui
+UI_FILES = stand_browser_dockwidget_base.ui stand_browser_toolboxwidget_base.ui
 
 EXTRAS = metadata.txt StandBrowser.png
 

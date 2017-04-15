@@ -28,11 +28,12 @@ import qgis.utils
 
 # Import the code for the DockWidget
 from stand_browser_dockwidget import StandBrowserDockWidget
+from stand_browser_toolboxwidget import StandBrowserToolboxWidget
 import os.path
 
 # Import various QGIs classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
-from qgis.core import QgsApplication
+from qgis.core import QgsApplication, QGis
 
 from collections import namedtuple
 import re
@@ -87,6 +88,7 @@ class StandBrowser:
 
         self.pluginIsActive = False
         self.dockwidget = None
+        self.toolboxwidget = None
 
         self.layer = None
         self.layerId = None
@@ -432,6 +434,13 @@ class StandBrowser:
         self.feature_idx_from_selected_idx()
         self.update_active_feature(change_selection=False)
 
+    def pb_toolbox(self):
+        """Opens the toolbox dialog"""
+        if self.toolboxwidget is None:
+            # Create the dockwidget (after translation) and keep reference
+            self.toolboxwidget = StandBrowserToolboxWidget()
+        self.toolboxwidget.run()
+
     def pb_help(self):
         """Displays a help window"""
 
@@ -473,9 +482,9 @@ class StandBrowser:
         layers = QgsMapLayerRegistry.instance().mapLayers()
         self.dockwidget.cbLayer.clear()
         for layer_id, layer in layers.iteritems():
-            # Check if the layer is a vector layer and
+            # Check if the layer is a vector layer with polygons and
             # includes a 'standid' field
-            if layer.type() == QgsMapLayer.VectorLayer:
+            if layer.type() == QgsMapLayer.VectorLayer and layer.geometryType() == QGis.Polygon:
                 for f in layer.fields():
                     if f.name() == 'standid':
                         self.dockwidget.cbLayer.addItem(layer.name(), layer_id)
@@ -537,6 +546,8 @@ class StandBrowser:
                 self.pb_next_stand)
             self.dockwidget.tbPrev.clicked.connect(
                 self.pb_prev_stand)
+            self.dockwidget.tbToolbox.clicked.connect(
+                self.pb_toolbox)
             self.dockwidget.pbNextSelected.clicked.connect(
                 self.pb_next_selected_stand)
             self.dockwidget.pbPrevSelected.clicked.connect(
