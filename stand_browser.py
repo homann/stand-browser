@@ -203,8 +203,8 @@ class StandBrowser:
 
         # disconnects
         if self.layer is not None:
-            self.dockwidget.leActive.editingFinished.disconnect(
-                self.le_find_stand)
+            #self.dockwidget.leActive.editingFinished.disconnect(
+            #    self.le_find_stand)
             self.dockwidget.tbNext.clicked.disconnect(self.pb_next_stand)
             self.dockwidget.tbPrev.clicked.disconnect(self.pb_prev_stand)
             self.dockwidget.pbNextSelected.clicked.disconnect(
