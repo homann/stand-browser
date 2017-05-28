@@ -24,6 +24,7 @@ import os
 import sys
 import re
 import random
+import datetime
 
 from PyQt4 import uic
 from PyQt4.QtCore import *
@@ -132,6 +133,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             QMessageBox.information(self, "Info", "Not implemented")
             return
         idName = self.findNameField(fields)
+        dateName = self.findDateField(fields)
         xform = QgsCoordinateTransform(layerIn.crs(), layerOut.crs())
         ### Find the feature we're putting a point in
         # First, the layer
@@ -175,7 +177,10 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         for p in points:
             fet = QgsFeature(fields)
             fet.setGeometry(p)
-            fet.setAttribute(idName, 'p{}'.format(n))
+            if idName != '':
+                fet.setAttribute(idName, 'p{}'.format(n))
+            if dateName != '':
+                fet.setAttribute(dateName, datetime.date.today().isoformat())
             if not layerOut.addFeatures([fet]):
                 QMessageBox.critical(self, "Error", "addFeatures()")
             n = n + 1
@@ -193,4 +198,14 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
                     return f.name()
         return ''
 
-    ##def distributeRandomly(self, 
+    def findDateField(self, fields):
+        """Find the field name that is most reasonable to use
+        for date"""
+
+        patterns = ['date$', '^date']
+        for p in patterns:
+            for f in fields:
+                if re.search(p, f.name()):
+                    return f.name()
+        return ''
+    
