@@ -158,7 +158,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             p_x = random.uniform(bb.xMinimum(), bb.xMaximum())
             p_y = random.uniform(bb.yMinimum(), bb.yMaximum())
             p = QgsGeometry.fromPoint(QgsPoint(p_x, p_y))
-            if stand_layer_geo.contains(p):
+            if stand_layer_geo.contains(p) and self.checkDistance(points, p, min_distance):
                 points.append(p)
                 nr_of_points = nr_of_points - 1
                 if not nr_of_points:
@@ -209,3 +209,10 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
                     return f.name()
         return ''
     
+    def checkDistance(self, points, p, min_distance):
+        """Check that point p is more than min_distance from all
+        geometries in points. This can(must?) be optimized"""
+        for g in points:
+            if g.distance(p) < min_distance:
+                return False
+        return True
