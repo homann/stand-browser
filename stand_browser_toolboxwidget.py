@@ -97,11 +97,12 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         """The OK button was pressed"""
 
         # Find out what tab we're on and perform selected action
-        if self.tb.currentIndex() == 1:
+        if self.tb.currentIndex() == 0:
             self.action_grid()
-        elif self.tb.currentIndex() == 0:
-            QMessageBox.information(self, "Info", "QField")
-
+        else:
+            QMessageBox.information(self, "Info", "Not implemented")
+        # Close when we are done
+        #self.reject()
 
     def action_grid(self):
         """Perform whatever action the grid tab specified"""
@@ -120,7 +121,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             fields = layerIn.fields()
             # Creat a new memory layer with same crs.
             layerOut = QgsVectorLayer("Point?crs={}".format(layerIn.crs().authid()),
-                                      "temporary_points", "memory")
+                                      "Inventory points", "memory")
             pr = layerOut.dataProvider()
             # Set fields
             pr.addAttributes(fields)
@@ -141,15 +142,16 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         stand_layer_geometries = [f.geometry()
                                   for f in
                                   stand_layer.selectedFeaturesIterator()]
-        # Add a buffer, take half of the minimum distance.
+        # Add a buffer to avoid the border. Use half of the minimum distance.
         min_distance = 25
         stand_layer_geo = stand_layer_geometries[0].buffer(min_distance/-2, 12)
         stand_layer_geo.transform(xform)
         # Find out how many points we want to add
         nr_of_points = int(self.sbMinPoint.value())
+        # Distribute points
+        bb = stand_layer_geo.boundingBox()
         nr_of_iter = nr_of_points * 200
         points = []
-        bb = stand_layer_geo.boundingBox()
         for i in range(0, nr_of_iter):
             p_x = random.uniform(bb.xMinimum(), bb.xMaximum())
             p_y = random.uniform(bb.yMinimum(), bb.yMaximum())
@@ -159,14 +161,24 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
                 nr_of_points = nr_of_points - 1
                 if not nr_of_points:
                     break
+        # Check if we managed to place enough points
+        if nr_of_points:
+            QMessageBox.information(self, "Warning",
+                             "Couldn't add requested number of points. "+
+                             "Please adjust number of points or minimum spacing"
+            )
+            return
+        # Add points to layer and display layer
         layerOut.startEditing()
         layerOut.beginEditCommand("Adding points")
+        n = 0
         for p in points:
             fet = QgsFeature(fields)
             fet.setGeometry(p)
-            fet.setAttribute(idName, 'apa')
+            fet.setAttribute(idName, 'p{}'.format(n))
             if not layerOut.addFeatures([fet]):
                 QMessageBox.critical(self, "Error", "addFeatures()")
+            n = n + 1
         layerOut.endEditCommand()
         QgsMapLayerRegistry.instance().addMapLayer(layerOut)
 

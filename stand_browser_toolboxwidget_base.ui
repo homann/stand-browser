@@ -20,6 +20,9 @@
    <bool>true</bool>
   </property>
   <widget class="QTabWidget" name="tb">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -29,13 +32,8 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
-   <widget class="QWidget" name="tabQField">
-    <attribute name="title">
-     <string>QField</string>
-    </attribute>
-   </widget>
    <widget class="QWidget" name="tabGrid">
     <attribute name="title">
      <string>Grid</string>
@@ -45,23 +43,20 @@
       <rect>
        <x>13</x>
        <y>10</y>
-       <width>371</width>
+       <width>391</width>
        <height>191</height>
       </rect>
      </property>
      <property name="plainText">
-      <string>Description:
-Select layer from drop down
-Grid spacing options:
-1) Regular over each
-2) Random over each
-(Check box for treating selcted stand as one when it comes to spacing.
+      <string>DESCRIPTION
 
-Create new layer or add to existing.
+1) Select layer from drop down.
 
-Use a template layer with fields from standid, but with points, or add to existing.
+2) Select distribution algorithm (currently only random distribution)
 
-Can we use code from standard toolbox?</string>
+3) Choose if creating new layer from template or adding to existing. The template is made with field name and types from existing file, but geometries as points (currently only creating new from template).
+
+4) Select 'Ok', 'Close' or 'Apply'.</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cbLayer">
@@ -100,7 +95,10 @@ Can we use code from standard toolbox?</string>
       <string>Select distribution algorithm:</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_2">
+    <widget class="QComboBox" name="cbAlgo">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -211,6 +209,9 @@ Can we use code from standard toolbox?</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>300</x>
@@ -224,6 +225,9 @@ Can we use code from standard toolbox?</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="rbExisting">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -247,6 +251,9 @@ Can we use code from standard toolbox?</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -261,16 +268,18 @@ Can we use code from standard toolbox?</string>
   <widget class="QDialogButtonBox" name="bbDialog">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>5</x>
      <y>490</y>
-     <width>156</width>
+     <width>411</width>
      <height>23</height>
     </rect>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Close|QDialogButtonBox::Ok</set>
    </property>
   </widget>
+  <zorder>bbDialog</zorder>
+  <zorder>tb</zorder>
  </widget>
  <resources/>
  <connections/>
