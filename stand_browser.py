@@ -33,7 +33,7 @@ import os.path
 
 # Import various QGIs classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
-from qgis.core import QgsApplication, QGis
+from qgis.core import QgsApplication, QGis, QgsCoordinateTransform
 
 from collections import namedtuple
 import re
@@ -382,6 +382,11 @@ class StandBrowser:
 
         # Pan and zoom to new feature
         selected_bb = self.layer.boundingBoxOfSelected()
+        xform = QgsCoordinateTransform(
+            self.layer.crs(),
+            self.iface.mapCanvas().mapSettings().destinationCrs()
+        )
+        selected_bb = xform.transform(selected_bb)
         if not self.iface.mapCanvas().extent().contains(selected_bb):
             self.iface.mapCanvas().panToSelected(self.layer)
         if not self.iface.mapCanvas().extent().contains(selected_bb):
