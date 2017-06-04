@@ -49,7 +49,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         self.setupUi(self)
         # signals
         self.bbDialog.rejected.connect(self.reject)
-        self.bbDialog.accepted.connect(self.pb_accepted)
+        self.bbDialog.button(QDialogButtonBox.Apply).clicked.connect(self.pb_accepted)
         self.pbTemplate.clicked.connect(self.pb_template)
         # self.accepted.connect(self.save_settings)
         self.template = QFileInfo(__file__).path() +\
@@ -82,6 +82,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # Set the layer list
         self.update_layer_list()
         self.leTemplate.setText(self.template)
+        self.cbAlgo.addItem('Random')
 
     def pb_template(self):
         """Activated by the browse button"""
@@ -166,13 +167,13 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         if not len(stand_layer_geometries):
             QMessageBox.critical(self, "Error!", "No stand selected!")
             return
-        stand_later_geom = stand_layer_geometries[0]
+        stand_layer_geom = stand_layer_geometries[0]
         # Find out how many points we want to add
         MIN_AREA = 10000
         MAX_AREA = 50000
         da = QgsDistanceArea()
         da.setSourceCrs(geom_crs)
-        sqr_meters = da.measureArea(stand_later_geom)
+        sqr_meters = da.measureArea(stand_layer_geom)
         nr_of_points = self.interpolate_points_sqrt(sqr_meters,
                                                     MIN_AREA,
                                                     int(self.sbMinPoint.value()),
@@ -181,7 +182,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         #print "Points:", nr_of_points
         # Add a buffer to avoid the border. Use half of the minimum distance.
         min_distance = 25
-        stand_later_geom=stand_later_geom.buffer(min_distance/-2, 12)
+        stand_layer_geom=stand_layer_geom.buffer(min_distance/-2, 12)
         # Distribute points
         bb = stand_layer_geom.boundingBox()
         nr_of_iter = nr_of_points * 200

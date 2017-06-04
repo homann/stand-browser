@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
+    <width>397</width>
     <height>525</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>421</width>
+     <width>401</width>
      <height>481</height>
     </rect>
    </property>
@@ -43,8 +43,8 @@
       <rect>
        <x>13</x>
        <y>10</y>
-       <width>391</width>
-       <height>191</height>
+       <width>371</width>
+       <height>171</height>
       </rect>
      </property>
      <property name="plainText">
@@ -56,7 +56,7 @@
 
 3) Choose if creating new layer from template or adding to existing. The template is made with field name and types from existing file, but geometries as points (currently only creating new from template).
 
-4) Select 'Ok', 'Close' or 'Apply'.</string>
+4) Select 'Apply or 'Close'.</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cbLayer">
@@ -124,7 +124,7 @@
     <widget class="QSpinBox" name="sbMinPoint">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>240</x>
        <y>290</y>
        <width>42</width>
        <height>22</height>
@@ -140,7 +140,7 @@
     <widget class="QSpinBox" name="sbMaxPoint">
      <property name="geometry">
       <rect>
-       <x>340</x>
+       <x>330</x>
        <y>290</y>
        <width>42</width>
        <height>22</height>
@@ -270,12 +270,12 @@
     <rect>
      <x>5</x>
      <y>490</y>
-     <width>411</width>
+     <width>381</width>
      <height>23</height>
     </rect>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Close|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Apply|QDialogButtonBox::Close</set>
    </property>
   </widget>
   <zorder>bbDialog</zorder>

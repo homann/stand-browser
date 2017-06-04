@@ -533,6 +533,8 @@ class StandBrowser:
                 QgsApplication.getThemeIcon("/mActionAtlasNext.svg"))
             self.dockwidget.tbPrev.setIcon(
                 QgsApplication.getThemeIcon("/mActionAtlasPrev.svg"))
+            self.dockwidget.tbToolbox.setIcon(
+                QgsApplication.getThemeIcon("/mIconProperties.svg"))
             self.dockwidget.tbHelp.setIcon(
                 QgsApplication.getThemeIcon("/mActionHelpContents.svg"))
             self.dockwidget.tbSearch.setIcon(
