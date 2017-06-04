@@ -11,7 +11,7 @@
 name=Stand Browser
 qgisMinimumVersion=2.18
 description=Browse forest stands
-version=1.2
+version=1.3
 author=Magnus Homann
 email=magnus@homann.se
 
@@ -24,7 +24,10 @@ repository=https://github.com/homann/stand-browser
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog=1.2
+changelog=1.3
+  - Added a toolbox, and functionlity to add ramndom points inside
+    a stand.
+  1.2
   - Updated GUI with icons
   - Changed search function
   1.1

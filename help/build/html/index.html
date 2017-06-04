@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Stand Browser - forestry in QGIS &#8212; StandBrowser 1.2 documentation</title>
+    <title>Stand Browser - forestry in QGIS &#8212; StandBrowser 1.3 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -34,7 +34,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="#">StandBrowser 1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">StandBrowser 1.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -220,11 +220,37 @@ and search icon next to it. Writing the name of a stand and hitting return
 or the search icon, searches for that stand and displays it. If no such
 stand is found, nothing happens.</p>
 </div>
+<div class="section" id="toolbox">
+<h1>Toolbox<a class="headerlink" href="#toolbox" title="Permalink to this headline">¶</a></h1>
+<p>By clicking the toolbox button, a new window is opened. It provuides
+the following functionality:</p>
+<div class="section" id="grid">
+<h2>Grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h2>
+<p>If you want to make a data set with inventory points for a stand,
+&#8216;Grid&#8217; can distribute the points for you. By selecting a template
+layer file, you can also give the inventory points the fields you
+want. An example inventory template is provided.</p>
+<p>The number of points is interpolated with a square root function
+between the minimum value for 1 hectare and the maximum value for 5
+hectares. Above and below that size og stand, the number of points is
+fixed. The minimum distance between points is set to 25 m, and half
+that distance is used as padding to the stand border. If the number of
+points can not be randomly placed with those constraints within a
+certain time, the tool will give up and you will be notifed.</p>
+<p>The &#8216;Grid&#8217; tool scans the filed names and will look for a name
+indicating the field contains the id. If so, it will be populated with
+a sequence number.</p>
+<p>If a field name indicates it contains a date, it will be populated
+with today&#8217;s date in ISO 8601 format (YYYY-MM-DD).</p>
+</div>
+</div>
 <div class="section" id="example-data">
 <h1>Example data<a class="headerlink" href="#example-data" title="Permalink to this headline">¶</a></h1>
 <p>There is example data in the <a class="reference external" href="../../../example_data">.../example_data</a> directory.</p>
 <p>It also contains a QML-file, that can be applied to the stand layer
 for a nice look.</p>
+<p>A template file for inventory points is also provided. If you
+want to modify it, first copy it to a safe place.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -248,6 +274,10 @@ for a nice look.</p>
 <li><a class="reference internal" href="#">Stand Browser - forestry in QGIS</a></li>
 <li><a class="reference internal" href="#data-format">Data format</a></li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#toolbox">Toolbox</a><ul>
+<li><a class="reference internal" href="#grid">Grid</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#example-data">Example data</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
@@ -279,7 +309,7 @@ for a nice look.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="#">StandBrowser 1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">StandBrowser 1.3 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

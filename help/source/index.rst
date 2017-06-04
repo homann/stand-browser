@@ -90,6 +90,36 @@ and search icon next to it. Writing the name of a stand and hitting return
 or the search icon, searches for that stand and displays it. If no such
 stand is found, nothing happens.
 
+Toolbox
+=======
+
+By clicking the toolbox button, a new window is opened. It provuides
+the following functionality:
+
+Grid
+----
+
+If you want to make a data set with inventory points for a stand,
+'Grid' can distribute the points for you. By selecting a template
+layer file, you can also give the inventory points the fields you
+want. An example inventory template is provided.
+
+The number of points is interpolated with a square root function
+between the minimum value for 1 hectare and the maximum value for 5
+hectares. Above and below that size og stand, the number of points is
+fixed. The minimum distance between points is set to 25 m, and half
+that distance is used as padding to the stand border. If the number of
+points can not be randomly placed with those constraints within a
+certain time, the tool will give up and you will be notifed.
+
+The 'Grid' tool scans the filed names and will look for a name
+indicating the field contains the id. If so, it will be populated with
+a sequence number.
+
+If a field name indicates it contains a date, it will be populated
+with today's date in ISO 8601 format (YYYY-MM-DD).
+
+
 Example data
 ============
 
@@ -97,6 +127,9 @@ There is example data in the `.../example_data`__ directory.
 
 It also contains a QML-file, that can be applied to the stand layer
 for a nice look.
+
+A template file for inventory points is also provided. If you
+want to modify it, first copy it to a safe place.
 
 __ ../../../example_data
 
