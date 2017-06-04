@@ -205,7 +205,7 @@ class StandBrowser:
 
         # disconnects
         if self.layer is not None:
-            #self.dockwidget.leActive.editingFinished.disconnect(
+            # self.dockwidget.leActive.editingFinished.disconnect(
             #    self.le_find_stand)
             self.dockwidget.tbNext.clicked.disconnect(self.pb_next_stand)
             self.dockwidget.tbPrev.clicked.disconnect(self.pb_prev_stand)
@@ -489,7 +489,8 @@ class StandBrowser:
         for layer_id, layer in layers.iteritems():
             # Check if the layer is a vector layer with polygons and
             # includes a 'standid' field
-            if layer.type() == QgsMapLayer.VectorLayer and layer.geometryType() == QGis.Polygon:
+            if (layer.type() == QgsMapLayer.VectorLayer and
+                    layer.geometryType() == QGis.Polygon):
                 for f in layer.fields():
                     if f.name() == 'standid':
                         self.dockwidget.cbLayer.addItem(layer.name(), layer_id)

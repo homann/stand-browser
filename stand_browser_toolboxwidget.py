@@ -31,14 +31,15 @@ from PyQt4 import uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-# Import various QGIs classes
-# from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
-# from qgis.core import QgsApplication, QgsVectorLayer, QGis, QgsFeature
-# from qgis.core import QgsGeometry, QgsPoint
-from qgis.core import *
+# Import various QGIS classes
+from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
+from qgis.core import QgsApplication, QgsVectorLayer, QGis, QgsFeature
+from qgis.core import QgsGeometry, QgsPoint, NULL, QgsDistanceArea
+from qgis.core import QgsCoordinateTransform
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'stand_browser_toolboxwidget_base.ui'), from_imports=False)
+    os.path.dirname(__file__), 'stand_browser_toolboxwidget_base.ui'),
+    from_imports=False)
 
 
 class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
@@ -49,7 +50,8 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         self.setupUi(self)
         # signals
         self.bbDialog.rejected.connect(self.reject)
-        self.bbDialog.button(QDialogButtonBox.Apply).clicked.connect(self.pb_accepted)
+        self.bbDialog.button(QDialogButtonBox.Apply).clicked.connect(
+            self.pb_accepted)
         self.pbTemplate.clicked.connect(self.pb_template)
         # self.accepted.connect(self.save_settings)
         self.template = QFileInfo(__file__).path() +\
@@ -61,7 +63,6 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         self.set_fields()
         self.show()
 
-
     def update_layer_list(self):
         """Set the list of available layers"""
 
@@ -70,7 +71,8 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         for layer_id, layer in layers.iteritems():
             # Check if the layer is a vector layer with polygons and
             # includes a 'standid' field
-            if layer.type() == QgsMapLayer.VectorLayer and layer.geometryType() == QGis.Polygon:
+            if (layer.type() == QgsMapLayer.VectorLayer and
+                    layer.geometryType() == QGis.Polygon):
                 for f in layer.fields():
                     if f.name() == 'standid':
                         self.cbLayer.addItem(layer.name(), layer_id)
@@ -95,7 +97,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         if f != '':
             template = f
             self.leTemplate.setText(template)
-            
+
     def pb_accepted(self):
         """The OK button was pressed"""
 
@@ -105,7 +107,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         else:
             QMessageBox.information(self, "Info", "Not implemented")
         # Close when we are done
-        #self.reject()
+        # self.reject()
 
     def action_grid(self):
         """Perform whatever action the grid tab specified"""
@@ -123,12 +125,15 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             # Read field map
             fields = layer_template.fields()
             # Creat a new memory layer with same crs.
-            layerOut = QgsVectorLayer("Point?crs={}".format(layer_template.crs().authid()),
-                                      "Inventory points", "memory")
+            layerOut = QgsVectorLayer(
+                "Point?crs={}".format(layer_template.crs().authid()),
+                "Inventory points", "memory"
+            )
             pr = layerOut.dataProvider()
             # Set fields
             pr.addAttributes(fields)
-            layerOut.updateFields() # tell the vector layer to fetch changes from the provider            
+            # Tell the vector layer to fetch changes from the provider
+            layerOut.updateFields()
         elif self.rbExisting.isChecked():
             # Check if it's a point vector layer
             # Is it already opened in QGIS?
@@ -136,10 +141,10 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             return
         idName = self.findNameField(fields)
         dateName = self.findDateField(fields)
-        ### Find the feature we're putting a point in
+        # # # Find the feature we're putting a point in
         # First, the layer
         stand_layer_idx = self.cbLayer.currentIndex()
-        stand_layer_id  = self.cbLayer.itemData(stand_layer_idx)
+        stand_layer_id = self.cbLayer.itemData(stand_layer_idx)
         stand_layer = QgsMapLayerRegistry.instance().mapLayer(stand_layer_id)
         # Then, the stand and geometry.
         stand_layer_geometries = [f.geometry()
@@ -154,7 +159,8 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             if layerOut.crs().geographicFlag():
                 # Oops. Tell the customer
                 QMessageBox.critical(self, "Error", "Neither input our output\
-                layer are projected. Change either layer crs to a projected crs")
+                layer are projected. Change either layer crs to a projected\
+                crs")
                 return
             # OK, stand_layer is geographic, but layerout is projected
             # Transform all the geometries to layerOut
@@ -174,15 +180,16 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         da = QgsDistanceArea()
         da.setSourceCrs(geom_crs)
         sqr_meters = da.measureArea(stand_layer_geom)
-        nr_of_points = self.interpolate_points_sqrt(sqr_meters,
-                                                    MIN_AREA,
-                                                    int(self.sbMinPoint.value()),
-                                                    MAX_AREA,
-                                                    int(self.sbMaxPoint.value()))
-        #print "Points:", nr_of_points
+        nr_of_points = self.interpolate_points_sqrt(
+            sqr_meters,
+            MIN_AREA,
+            int(self.sbMinPoint.value()),
+            MAX_AREA,
+            int(self.sbMaxPoint.value()))
+        # print "Points:", nr_of_points
         # Add a buffer to avoid the border. Use half of the minimum distance.
         min_distance = 25
-        stand_layer_geom=stand_layer_geom.buffer(min_distance/-2, 12)
+        stand_layer_geom = stand_layer_geom.buffer(-min_distance / 2, 12)
         # Distribute points
         bb = stand_layer_geom.boundingBox()
         nr_of_iter = nr_of_points * 200
@@ -191,17 +198,19 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             p_x = random.uniform(bb.xMinimum(), bb.xMaximum())
             p_y = random.uniform(bb.yMinimum(), bb.yMaximum())
             p = QgsGeometry.fromPoint(QgsPoint(p_x, p_y))
-            if stand_layer_geom.contains(p) and self.checkDistance(points, p, min_distance):
+            if (stand_layer_geom.contains(p) and
+                    self.checkDistance(points, p, min_distance)):
                 points.append(p)
                 nr_of_points = nr_of_points - 1
                 if not nr_of_points:
                     break
         # Check if we managed to place enough points
         if nr_of_points:
-            QMessageBox.information(self, "Warning",
-                                    "Couldn't add requested number of points. "+
-                                    "Please adjust number of points or minimum spacing,"+
-                                    " if more points are needed"
+            QMessageBox.information(
+                self, "Warning",
+                "Couldn't add requested number of points. " +
+                "Please adjust number of points or minimum spacing, " +
+                "if more points are needed"
             )
         # Set feature xform
         xform = QgsCoordinateTransform(geom_crs, layerOut.crs())
@@ -245,7 +254,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
                 if re.search(p, f.name()):
                     return f.name()
         return ''
-    
+
     def checkDistance(self, points, p, min_distance):
         """Check that point p is more than min_distance from all
         geometries in points. This can(must?) be optimized"""
@@ -264,15 +273,15 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
     #     a = y1
     #     b = (y2-y1)/math.log(x2/x1)
     #     return int(math.floor(a + b*math.log(sqm/x1)))
-            
+
     def interpolate_points_sqrt(self, sqm, x1, y1, x2, y2):
         """Interpolate number of points we should use when
         distributing on a grid"""
-        
+
         if sqm < x1:
             return y1
         elif sqm > x2:
             return y2
-        a = (y2-y1)/(math.sqrt(x2)-math.sqrt(x1))
-        b = y1-math.sqrt(x1)*a
-        return int(math.floor(a*math.sqrt(sqm)+b))
+        a = (y2 - y1) / (math.sqrt(x2) - math.sqrt(x1))
+        b = y1 - math.sqrt(x1) * a
+        return int(math.floor(a * math.sqrt(sqm) + b))
