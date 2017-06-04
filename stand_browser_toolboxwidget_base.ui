@@ -137,7 +137,7 @@
       <number>5</number>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox_2">
+    <widget class="QSpinBox" name="sbMaxPoint">
      <property name="geometry">
       <rect>
        <x>340</x>

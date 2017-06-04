@@ -24,6 +24,7 @@ import os
 import sys
 import re
 import random
+import math
 import datetime
 
 from PyQt4 import uic
@@ -112,16 +113,16 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # an existing one
         if self.rbTemplate.isChecked():
             # Find out if it's a vector layer, ignore type of geometry
-            layerIn = QgsVectorLayer(self.leTemplate.text(),
-                                   'Template',
-                                   'ogr')
-            if not layerIn.isValid() :
+            layer_template = QgsVectorLayer(self.leTemplate.text(),
+                                      'Template',
+                                      'ogr')
+            if not layer_template.isValid() :
                 QMessageBox.critical(self, "Error", "Couldn't load layer!")
                 return
             # Read field map
-            fields = layerIn.fields()
+            fields = layer_template.fields()
             # Creat a new memory layer with same crs.
-            layerOut = QgsVectorLayer("Point?crs={}".format(layerIn.crs().authid()),
+            layerOut = QgsVectorLayer("Point?crs={}".format(layer_template.crs().authid()),
                                       "Inventory points", "memory")
             pr = layerOut.dataProvider()
             # Set fields
@@ -134,7 +135,6 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             return
         idName = self.findNameField(fields)
         dateName = self.findDateField(fields)
-        xform = QgsCoordinateTransform(layerIn.crs(), layerOut.crs())
         ### Find the feature we're putting a point in
         # First, the layer
         stand_layer_idx = self.cbLayer.currentIndex()
@@ -144,21 +144,53 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         stand_layer_geometries = [f.geometry()
                                   for f in
                                   stand_layer.selectedFeaturesIterator()]
+        # Check for projections
+        geom_crs = stand_layer.crs()
+        if geom_crs.geographicFlag():
+            # This is not a projected layer. If layerOut
+            # isn't either, we will abort. Need a projected
+            # crs for calculating points etc.
+            if layerOut.crs().geographicFlag():
+                # Oops. Tell the customer
+                QMessageBox.critical(self, "Error", "Neither input our output\
+                layer are projected. Change either layer crs to a projected crs")
+                return
+            # OK, stand_layer is geographic, but layerout is projected
+            # Transform all the geometries to layerOut
+            geom_crs = layerOut.crs()
+            xform = QgsCoordinateTransform(stand_layer.crs(), geom_crs)
+            # Modify in-place.
+            for i, g in enumerate(stand_layer_geometries):
+                g.transform(xform)
+                stand_layer_geometries[i] = g
+        if not len(stand_layer_geometries):
+            QMessageBox.critical(self, "Error!", "No stand selected!")
+            return
+        stand_later_geom = stand_layer_geometries[0]
+        # Find out how many points we want to add
+        MIN_AREA = 10000
+        MAX_AREA = 50000
+        da = QgsDistanceArea()
+        da.setSourceCrs(geom_crs)
+        sqr_meters = da.measureArea(stand_later_geom)
+        nr_of_points = self.interpolate_points_sqrt(sqr_meters,
+                                                    MIN_AREA,
+                                                    int(self.sbMinPoint.value()),
+                                                    MAX_AREA,
+                                                    int(self.sbMaxPoint.value()))
+        #print "Points:", nr_of_points
         # Add a buffer to avoid the border. Use half of the minimum distance.
         min_distance = 25
-        stand_layer_geo = stand_layer_geometries[0].buffer(min_distance/-2, 12)
-        stand_layer_geo.transform(xform)
-        # Find out how many points we want to add
-        nr_of_points = int(self.sbMinPoint.value())
+        stand_later_geom=stand_later_geom.buffer(min_distance/-2, 12)
         # Distribute points
-        bb = stand_layer_geo.boundingBox()
+        bb = stand_layer_geom.boundingBox()
         nr_of_iter = nr_of_points * 200
         points = []
         for i in range(0, nr_of_iter):
             p_x = random.uniform(bb.xMinimum(), bb.xMaximum())
             p_y = random.uniform(bb.yMinimum(), bb.yMaximum())
             p = QgsGeometry.fromPoint(QgsPoint(p_x, p_y))
-            if stand_layer_geo.contains(p) and self.checkDistance(points, p, min_distance):
+            if stand_layer_geom.contains(p) and self.checkDistance(points, p, min_distance):
                 points.append(p)
                 nr_of_points = nr_of_points - 1
                 if not nr_of_points:
@@ -166,15 +198,19 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # Check if we managed to place enough points
         if nr_of_points:
             QMessageBox.information(self, "Warning",
-                             "Couldn't add requested number of points. "+
-                             "Please adjust number of points or minimum spacing"
+                                    "Couldn't add requested number of points. "+
+                                    "Please adjust number of points or minimum spacing,"+
+                                    " if more points are needed"
             )
-            return
+        # Set feature xform
+        xform = QgsCoordinateTransform(geom_crs, layerOut.crs())
         # Add points to layer and display layer
         layerOut.startEditing()
         layerOut.beginEditCommand("Adding points")
         n = 0
         for p in points:
+            # Transform to output layer crs
+            p.transform(xform)
             fet = QgsFeature(fields)
             fet.setGeometry(p)
             if idName != '':
@@ -216,3 +252,26 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             if g.distance(p) < min_distance:
                 return False
         return True
+
+    # def interpolate_points_log(self, sqm, x1, y1, x2, y2):
+    #     """Interpolate number of points we should use when
+    #     distributing on a grid"""
+    #     if sqm < x1:
+    #         return y1
+    #     elif sqm > x2:
+    #         return y2
+    #     a = y1
+    #     b = (y2-y1)/math.log(x2/x1)
+    #     return int(math.floor(a + b*math.log(sqm/x1)))
+            
+    def interpolate_points_sqrt(self, sqm, x1, y1, x2, y2):
+        """Interpolate number of points we should use when
+        distributing on a grid"""
+        
+        if sqm < x1:
+            return y1
+        elif sqm > x2:
+            return y2
+        a = (y2-y1)/(math.sqrt(x2)-math.sqrt(x1))
+        b = y1-math.sqrt(x1)*a
+        return int(math.floor(a*math.sqrt(sqm)+b))
