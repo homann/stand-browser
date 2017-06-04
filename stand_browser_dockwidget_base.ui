@@ -120,7 +120,7 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>Öppna verktygslåda</string>
+         <string>Open toolbox</string>
         </property>
         <property name="styleSheet">
          <string notr="true"/>

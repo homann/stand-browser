@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
+    <width>514</width>
     <height>525</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>401</width>
+     <width>511</width>
      <height>481</height>
     </rect>
    </property>
@@ -43,8 +43,8 @@
       <rect>
        <x>13</x>
        <y>10</y>
-       <width>371</width>
-       <height>171</height>
+       <width>491</width>
+       <height>191</height>
       </rect>
      </property>
      <property name="plainText">
@@ -62,8 +62,8 @@
     <widget class="QComboBox" name="cbLayer">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>220</y>
+       <x>350</x>
+       <y>210</y>
        <width>131</width>
        <height>22</height>
       </rect>
@@ -74,7 +74,7 @@
       <rect>
        <x>20</x>
        <y>220</y>
-       <width>201</width>
+       <width>231</width>
        <height>16</height>
       </rect>
      </property>
@@ -87,7 +87,7 @@
       <rect>
        <x>20</x>
        <y>250</y>
-       <width>191</width>
+       <width>221</width>
        <height>16</height>
       </rect>
      </property>
@@ -101,8 +101,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>250</y>
+       <x>350</x>
+       <y>240</y>
        <width>131</width>
        <height>22</height>
       </rect>
@@ -112,21 +112,21 @@
      <property name="geometry">
       <rect>
        <x>60</x>
-       <y>290</y>
-       <width>151</width>
+       <y>280</y>
+       <width>181</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Number of points/stand</string>
+      <string>Number of points/stand:</string>
      </property>
     </widget>
     <widget class="QSpinBox" name="sbMinPoint">
      <property name="geometry">
       <rect>
-       <x>240</x>
-       <y>290</y>
-       <width>42</width>
+       <x>351</x>
+       <y>280</y>
+       <width>51</width>
        <height>22</height>
       </rect>
      </property>
@@ -140,9 +140,9 @@
     <widget class="QSpinBox" name="sbMaxPoint">
      <property name="geometry">
       <rect>
-       <x>330</x>
-       <y>290</y>
-       <width>42</width>
+       <x>441</x>
+       <y>280</y>
+       <width>51</width>
        <height>22</height>
       </rect>
      </property>
@@ -156,21 +156,21 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>300</x>
-       <y>290</y>
+       <x>410</x>
+       <y>280</y>
        <width>31</width>
        <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>Max:</string>
+      <string>Max</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>210</x>
-       <y>290</y>
+       <x>310</x>
+       <y>280</y>
        <width>31</width>
        <height>16</height>
       </rect>
@@ -184,7 +184,7 @@
       <rect>
        <x>20</x>
        <y>330</y>
-       <width>181</width>
+       <width>381</width>
        <height>17</height>
       </rect>
      </property>
@@ -198,8 +198,8 @@
     <widget class="QPushButton" name="pbTemplate">
      <property name="geometry">
       <rect>
-       <x>300</x>
-       <y>350</y>
+       <x>420</x>
+       <y>340</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -214,8 +214,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>300</x>
-       <y>410</y>
+       <x>420</x>
+       <y>400</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -232,7 +232,7 @@
       <rect>
        <x>20</x>
        <y>390</y>
-       <width>181</width>
+       <width>381</width>
        <height>17</height>
       </rect>
      </property>
@@ -245,7 +245,7 @@
       <rect>
        <x>50</x>
        <y>350</y>
-       <width>231</width>
+       <width>351</width>
        <height>20</height>
       </rect>
      </property>
@@ -258,7 +258,7 @@
       <rect>
        <x>50</x>
        <y>410</y>
-       <width>231</width>
+       <width>351</width>
        <height>20</height>
       </rect>
      </property>
@@ -270,7 +270,7 @@
     <rect>
      <x>5</x>
      <y>490</y>
-     <width>381</width>
+     <width>501</width>
      <height>23</height>
     </rect>
    </property>

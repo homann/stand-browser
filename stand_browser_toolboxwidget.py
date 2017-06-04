@@ -82,7 +82,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # Set the layer list
         self.update_layer_list()
         self.leTemplate.setText(self.template)
-        self.cbAlgo.addItem('Random')
+        self.cbAlgo.addItem(self.tr('Random'))
 
     def pb_template(self):
         """Activated by the browse button"""
