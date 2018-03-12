@@ -27,13 +27,13 @@ import random
 import math
 import datetime
 
-from PyQt4 import uic
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 # Import various QGIS classes
-from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
-from qgis.core import QgsApplication, QgsVectorLayer, QGis, QgsFeature
+from qgis.core import QgsMapLayer, QgsFeatureRequest
+from qgis.core import QgsApplication, QgsVectorLayer, Qgis, QgsFeature
 from qgis.core import QgsGeometry, QgsPoint, NULL, QgsDistanceArea
 from qgis.core import QgsCoordinateTransform
 
@@ -42,7 +42,7 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     from_imports=False)
 
 
-class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
+class StandBrowserToolboxWidget(QtWidgets.QDialog, FORM_CLASS):
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -68,7 +68,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
 
         layers = QgsMapLayerRegistry.instance().mapLayers()
         self.cbLayer.clear()
-        for layer_id, layer in layers.iteritems():
+        for layer_id, layer in layers.items():
             # Check if the layer is a vector layer with polygons and
             # includes a 'standid' field
             if (layer.type() == QgsMapLayer.VectorLayer and

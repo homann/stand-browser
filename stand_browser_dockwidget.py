@@ -23,14 +23,14 @@
 
 import os
 
-from PyQt4 import QtGui, uic
-from PyQt4.QtCore import pyqtSignal
+from PyQt5 import QtGui, QtWidgets, uic
+from PyQt5.QtCore import pyqtSignal
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'stand_browser_dockwidget_base.ui'))
 
 
-class StandBrowserDockWidget(QtGui.QDockWidget, FORM_CLASS):
+class StandBrowserDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     closingPlugin = pyqtSignal()
 

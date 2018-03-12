@@ -9,9 +9,9 @@
 
 [general]
 name=Stand Browser
-qgisMinimumVersion=2.18
+qgisMinimumVersion=3.0
 description=Browse forest stands
-version=1.3
+version=1.4
 author=Magnus Homann
 email=magnus@homann.se
 

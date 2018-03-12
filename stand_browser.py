@@ -20,25 +20,25 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
-from PyQt4.QtGui import QAction, QIcon
+
 # Initialize Qt resources from file resources.py
-import resources
+from . import resources
 import qgis.utils
 
 # Import the code for the DockWidget
-from stand_browser_dockwidget import StandBrowserDockWidget
-from stand_browser_toolboxwidget import StandBrowserToolboxWidget
+from .stand_browser_dockwidget import StandBrowserDockWidget
+from .stand_browser_toolboxwidget import StandBrowserToolboxWidget
 import os.path
 
 # Import various QGIs classes
-from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest, NULL
-from qgis.core import QgsApplication, QGis, QgsCoordinateTransform
+from qgis.core import QgsMapLayer, Qgis, QgsFeatureRequest, NULL, QgsProject
+from qgis.core import QgsApplication, QgsCoordinateTransform
 
 from collections import namedtuple
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
@@ -81,8 +81,8 @@ class StandBrowser:
         self.actions = []
         self.menu = 'Stand Browser'
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'StandBrowser')
-        self.toolbar.setObjectName(u'StandBrowser')
+        self.toolbar = self.iface.addToolBar('StandBrowser')
+        self.toolbar.setObjectName('StandBrowser')
 
         # print "** INITIALIZING StandBrowser"
 
@@ -192,7 +192,7 @@ class StandBrowser:
         icon_path = ':/plugins/StandBrowser/StandBrowser.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Open browser...'),
+            text=self.tr('Open browser...'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -217,9 +217,9 @@ class StandBrowser:
                 self.set_from_external_selection)
             self.layer = None
 
-        QgsMapLayerRegistry.instance().layersAdded.disconnect(
+        QgsProject.instance().layersAdded.disconnect(
             self.update_layer_list)
-        QgsMapLayerRegistry.instance().layersRemoved.disconnect(
+        QgsProject.instance().layersRemoved.disconnect(
             self.update_layer_list)
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
         # remove this statement if dockwidget is to remain
@@ -251,7 +251,7 @@ class StandBrowser:
 
         if x == NULL:
             return ""
-        elif type(x) is int or type(x) is long:
+        elif type(x) is int or type(x) is int:
             return str(x)
         elif type(x) is float:
             return locale.str(x)
@@ -312,7 +312,7 @@ class StandBrowser:
         else:
             self.dockwidget.setEnabled(True)
         self.layerId = self.dockwidget.cbLayer.itemData(layer_idx)
-        self.layer = QgsMapLayerRegistry.instance().mapLayer(self.layerId)
+        self.layer = QgsProject.instance().mapLayer(self.layerId)
         self.layerFeatureIds = [StandTuple(f.id(), f.attribute('standid'))
                                 for f in self.layer.getFeatures()]
         self.layerFeatureIds.sort(key=self.stand_sort)
@@ -449,7 +449,7 @@ class StandBrowser:
     def pb_help(self):
         """Displays a help window"""
 
-        print "Starting help..."
+        print("Starting help...")
         qgis.utils.showPluginHelp(filename='help/build/html/index')
 
     def set_from_external_selection(self):
@@ -484,13 +484,13 @@ class StandBrowser:
     def update_layer_list(self):
         """Set the list of available layers"""
 
-        layers = QgsMapLayerRegistry.instance().mapLayers()
+        layers = QgsProject.instance().mapLayers()
         self.dockwidget.cbLayer.clear()
-        for layer_id, layer in layers.iteritems():
+        for layer_id, layer in layers.items():
             # Check if the layer is a vector layer with polygons and
             # includes a 'standid' field
             if (layer.type() == QgsMapLayer.VectorLayer and
-                    layer.geometryType() == QGis.Polygon):
+                    layer.geometryType() == Qgis.Polygon):
                 for f in layer.fields():
                     if f.name() == 'standid':
                         self.dockwidget.cbLayer.addItem(layer.name(), layer_id)
@@ -562,7 +562,7 @@ class StandBrowser:
                 self.pb_prev_selected_stand)
             self.dockwidget.cbLayer.currentIndexChanged.connect(
                 self.update_active_layer)
-            QgsMapLayerRegistry.instance().layersAdded.connect(
+            QgsProject.instance().layersAdded.connect(
                 self.update_layer_list)
-            QgsMapLayerRegistry.instance().layersRemoved.connect(
+            QgsProject.instance().layersRemoved.connect(
                 self.update_layer_list)

@@ -18,7 +18,7 @@ from PyQt4.QtGui import QDockWidget
 
 from stand_browser_dockwidget import StandBrowserDockWidget
 
-from utilities import get_qgis_app
+from .utilities import get_qgis_app
 
 QGIS_APP = get_qgis_app()
 
