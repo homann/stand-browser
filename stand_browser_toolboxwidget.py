@@ -31,6 +31,9 @@ from PyQt4 import uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+import locale
+locale.setlocale(locale.LC_ALL, '')
+
 # Import various QGIS classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
 from qgis.core import QgsApplication, QgsVectorLayer, QGis, QgsFeature
@@ -104,6 +107,8 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # Find out what tab we're on and perform selected action
         if self.tb.currentIndex() == 0:
             self.action_grid()
+        elif self.tb.currentIndex() == 1:
+            self.action_print()
         else:
             QMessageBox.information(self, "Info", "Not implemented")
         # Close when we are done
@@ -285,3 +290,59 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         a = (y2 - y1) / (math.sqrt(x2) - math.sqrt(x1))
         b = y1 - math.sqrt(x1) * a
         return int(math.floor(a * math.sqrt(sqm) + b))
+
+    ### Print  the selected layer
+    def stand_sort(self, stand_feat):
+        """Sorting algorithm for natural sort, inspired by
+        https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/"""
+
+        def convert(text):
+            return int(text) if text.isdigit() else text
+
+        return [convert(c) for c in re.split('([0-9]+)', stand_feat.attribute('standid'))]
+
+    def pretty_value(self, x, novalue=''):
+        """ A function to generate a text string suitabel for displaying
+        field values."""
+
+        if x == NULL:
+            return novalue
+        elif type(x) is int or type(x) is long:
+            return str(x)
+        elif type(x) is float:
+            return locale.str(x)
+        else:
+            return x
+
+    def pretty_field(self, feat, field, novalue=''):
+        """ A funtion to generate a text string from the field
+        value in current layer"""
+
+        try:
+            txt = feat.attribute(field)
+        except KeyError:
+            return novalue
+        return self.pretty_value(txt, novalue)
+    
+    def action_print(self):
+        
+        # First, the layer
+        stand_layer_idx = self.cbLayer.currentIndex()
+        stand_layer_id = self.cbLayer.itemData(stand_layer_idx)
+        stand_layer = QgsMapLayerRegistry.instance().mapLayer(stand_layer_id)
+
+        # Loop over each
+        for feat in sorted(stand_layer.getFeatures(), key=self.stand_sort):
+            row  = self.pretty_field(feat, 'standid') + ';'
+            row += self.pretty_field(feat, 'prodarea') + ';'
+            row += self.pretty_field(feat, 'meanage') + ';'
+            row += self.pretty_field(feat, 'maturitycl') + ';'
+            row += self.pretty_field(feat, 'sispecie') + self.pretty_field(feat, 'sis') + ';'
+            row += self.pretty_field(feat, 'v') + ';'
+            row += locale.str(locale.atof(self.pretty_field(feat, 'v', novalue='0')) *
+                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + ';'                            
+            row += self.pretty_field(feat, 'managecl') + ';'
+            
+            
+            print(row)
+            

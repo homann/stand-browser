@@ -264,6 +264,24 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="tabPrint">
+    <attribute name="title">
+     <string>Page</string>
+    </attribute>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>210</y>
+       <width>231</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pretty print table</string>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QDialogButtonBox" name="bbDialog">
    <property name="geometry">
