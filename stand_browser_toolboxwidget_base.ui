@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>514</width>
-    <height>525</height>
+    <width>512</width>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabGrid">
     <attribute name="title">
@@ -266,19 +266,16 @@
    </widget>
    <widget class="QWidget" name="tabPrint">
     <attribute name="title">
-     <string>Page</string>
+     <string>Print</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QTextEdit" name="teOutput">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>210</y>
-       <width>231</width>
-       <height>27</height>
+       <x>10</x>
+       <y>10</y>
+       <width>491</width>
+       <height>431</height>
       </rect>
-     </property>
-     <property name="text">
-      <string>Pretty print table</string>
      </property>
     </widget>
    </widget>

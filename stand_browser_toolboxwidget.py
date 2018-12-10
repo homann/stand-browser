@@ -325,24 +325,37 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         return self.pretty_value(txt, novalue)
     
     def action_print(self):
-        
+
+        locale.setlocale(locale.LC_ALL, '')
         # First, the layer
         stand_layer_idx = self.cbLayer.currentIndex()
         stand_layer_id = self.cbLayer.itemData(stand_layer_idx)
         stand_layer = QgsMapLayerRegistry.instance().mapLayer(stand_layer_id)
 
         # Loop over each
+        delim = ';'
+        row = u'Avd;Area;Ålder;Hkl;SI;m3sk/ha;m3sk/avd;Mål;TGLBÄ;Medeldia;Årlig tillväxt;Beskrivning;Uppdaterad;Källa\n'
+        self.teOutput.insertPlainText(row)
         for feat in sorted(stand_layer.getFeatures(), key=self.stand_sort):
-            row  = self.pretty_field(feat, 'standid') + ';'
-            row += self.pretty_field(feat, 'prodarea') + ';'
-            row += self.pretty_field(feat, 'meanage') + ';'
-            row += self.pretty_field(feat, 'maturitycl') + ';'
-            row += self.pretty_field(feat, 'sispecie') + self.pretty_field(feat, 'sis') + ';'
-            row += self.pretty_field(feat, 'v') + ';'
+            row  = self.pretty_field(feat, 'standid') + delim
+            row += self.pretty_field(feat, 'prodarea') + delim
+            row += self.pretty_field(feat, 'meanage') + delim
+            row += self.pretty_field(feat, 'maturitycl') + delim
+            row += self.pretty_field(feat, 'sispecie') + self.pretty_field(feat, 'sis') + delim
+            row += self.pretty_field(feat, 'v') + delim
             row += locale.str(locale.atof(self.pretty_field(feat, 'v', novalue='0')) *
-                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + ';'                            
-            row += self.pretty_field(feat, 'managecl') + ';'
-            
-            
-            print(row)
+                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + delim                            
+            row += self.pretty_field(feat, 'managecl') + delim
+            row += self.pretty_field(feat, 'ppine', '0') +\
+                   self.pretty_field(feat, 'pspruce', '0') +\
+                   self.pretty_field(feat, 'pbroadleaf', '0') +\
+                   self.pretty_field(feat, 'pbirach', '0') +\
+                   self.pretty_field(feat, 'pdeciduous', '0') + delim
+            row += self.pretty_field(feat, 'dgv') + delim
+            row += self.pretty_field(feat, 'cai') + delim
+            row += self.pretty_field(feat, 'comment') + delim
+            row += self.pretty_field(feat, 'updated').toPyDate().isoformat() + delim
+            row += self.pretty_field(feat, 'invsource') 
+            self.teOutput.insertPlainText(row)
+            self.teOutput.insertPlainText('\n')
             
