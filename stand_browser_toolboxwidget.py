@@ -32,7 +32,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import locale
-locale.setlocale(locale.LC_ALL, '')
 
 # Import various QGIS classes
 from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
@@ -314,7 +313,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         else:
             return x
 
-    def pretty_field(self, feat, field, novalue=''):
+    def pretty_field(self, feat, field, novalue='', quote_string=False):
         """ A funtion to generate a text string from the field
         value in current layer"""
 
@@ -332,19 +331,22 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         stand_layer_id = self.cbLayer.itemData(stand_layer_idx)
         stand_layer = QgsMapLayerRegistry.instance().mapLayer(stand_layer_id)
 
+        # Find delimiters and quotation characters
+        delim = self.leDelim.text()
+        quote = self.leStringQuote.text()
+        
         # Loop over each
-        delim = ';'
         row = u'Avd;Area;Ålder;Hkl;SI;m3sk/ha;m3sk/avd;Mål;TGLBÄ;Medeldia;Årlig tillväxt;Beskrivning;Uppdaterad;Källa\n'
-        self.teOutput.insertPlainText(row)
+        self.teOutput.setPlainText(row)
         for feat in sorted(stand_layer.getFeatures(), key=self.stand_sort):
-            row  = self.pretty_field(feat, 'standid') + delim
+            row  = quote + self.pretty_field(feat, 'standid') + quote + delim
             row += self.pretty_field(feat, 'prodarea') + delim
             row += self.pretty_field(feat, 'meanage') + delim
             row += self.pretty_field(feat, 'maturitycl') + delim
             row += self.pretty_field(feat, 'sispecie') + self.pretty_field(feat, 'sis') + delim
             row += self.pretty_field(feat, 'v') + delim
-            row += locale.str(locale.atof(self.pretty_field(feat, 'v', novalue='0')) *
-                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + delim                            
+            row += quote + locale.str(locale.atof(self.pretty_field(feat, 'v', novalue='0')) *
+                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + quote + delim                            
             row += self.pretty_field(feat, 'managecl') + delim
             row += self.pretty_field(feat, 'ppine', '0') +\
                    self.pretty_field(feat, 'pspruce', '0') +\
@@ -356,6 +358,5 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             row += self.pretty_field(feat, 'comment') + delim
             row += self.pretty_field(feat, 'updated').toPyDate().isoformat() + delim
             row += self.pretty_field(feat, 'invsource') 
-            self.teOutput.insertPlainText(row)
-            self.teOutput.insertPlainText('\n')
+            self.teOutput.insertPlainText(row+'\n')
             
