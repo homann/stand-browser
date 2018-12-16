@@ -21,26 +21,26 @@
  ***************************************************************************/
 """
 import os
-import sys
 import re
 import random
 import math
 import datetime
+import locale
 
 from PyQt4 import uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-import locale
 
 # Import various QGIS classes
-from qgis.core import QgsMapLayer, QgsMapLayerRegistry, QgsFeatureRequest
-from qgis.core import QgsApplication, QgsVectorLayer, QGis, QgsFeature
+from qgis.core import QgsMapLayer, QgsMapLayerRegistry
+from qgis.core import QgsVectorLayer, QGis, QgsFeature
 from qgis.core import QgsGeometry, QgsPoint, NULL, QgsDistanceArea
 from qgis.core import QgsCoordinateTransform
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'stand_browser_toolboxwidget_base.ui'),
+FORM_CLASS, _ = uic.loadUiType(
+    os.path.join(os.path.dirname(__file__),
+                 'stand_browser_toolboxwidget_base.ui'),
     from_imports=False)
 
 
@@ -95,7 +95,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
                                         self.tr('Select template file'),
                                         self.template,
                                         self.tr('SHP-file (*.shp)')
-                                        )
+                                       )
         if f != '':
             template = f
             self.leTemplate.setText(template)
@@ -121,9 +121,9 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         if self.rbTemplate.isChecked():
             # Find out if it's a vector layer, ignore type of geometry
             layer_template = QgsVectorLayer(self.leTemplate.text(),
-                                      'Template',
-                                      'ogr')
-            if not layer_template.isValid() :
+                                            'Template',
+                                            'ogr')
+            if not layer_template.isValid():
                 QMessageBox.critical(self, "Error", "Couldn't load layer!")
                 return
             # Read field map
@@ -296,6 +296,7 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/"""
 
         def convert(text):
+            """ Convert text to integer if possible, else return the text"""
             return int(text) if text.isdigit() else text
 
         return [convert(c) for c in re.split('([0-9]+)', stand_feat.attribute('standid'))]
@@ -306,14 +307,13 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
 
         if x == NULL:
             return novalue
-        elif type(x) is int or type(x) is long:
+        elif isinstance(x, (int, long)):
             return str(x)
-        elif type(x) is float:
+        elif isinstance(x, float):
             return locale.str(x)
-        else:
-            return x
+        return x
 
-    def pretty_field(self, feat, field, novalue='', quote_string=False):
+    def pretty_field(self, feat, field, novalue=''):
         """ A funtion to generate a text string from the field
         value in current layer"""
 
@@ -322,8 +322,10 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         except KeyError:
             return novalue
         return self.pretty_value(txt, novalue)
-    
+
     def action_print(self):
+        """ Takes the layer speciofed in the drop-down menu and prints
+        a nice table into the text window"""
 
         locale.setlocale(locale.LC_ALL, '')
         # First, the layer
@@ -336,19 +338,19 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         quote = self.leStringQuote.text()
 
         # Set header
-        self.teOutput.setPlainText('') 
+        self.teOutput.setPlainText('')
         row = u'Avd;Area;Ålder;Hkl;SI;m3sk/ha;m3sk/avd;Mål;TGLBÄ;Medeldia;Årlig tillväxt;Beskrivning;Uppdaterad;Källa\n'
         self.teOutput.insertPlainText(row)
         # Loop over each
         for feat in sorted(stand_layer.getFeatures(), key=self.stand_sort):
-            row  = quote + self.pretty_field(feat, 'standid') + quote + delim
+            row = quote + self.pretty_field(feat, 'standid') + quote + delim
             row += self.pretty_field(feat, 'prodarea') + delim
             row += self.pretty_field(feat, 'meanage') + delim
             row += self.pretty_field(feat, 'maturitycl') + delim
             row += self.pretty_field(feat, 'sispecie') + self.pretty_field(feat, 'sis') + delim
             row += self.pretty_field(feat, 'v') + delim
             row += quote + locale.str(locale.atof(self.pretty_field(feat, 'v', novalue='0')) *
-                              locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + quote + delim                            
+                                      locale.atof(self.pretty_field(feat, 'prodarea', novalue='0'))) + quote + delim
             row += self.pretty_field(feat, 'managecl') + delim
             row += self.pretty_field(feat, 'ppine', '0') +\
                    self.pretty_field(feat, 'pspruce', '0') +\
@@ -359,6 +361,5 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
             row += self.pretty_field(feat, 'cai') + delim
             row += self.pretty_field(feat, 'comment') + delim
             row += self.pretty_field(feat, 'updated').toPyDate().isoformat() + delim
-            row += self.pretty_field(feat, 'invsource') 
+            row += self.pretty_field(feat, 'invsource')
             self.teOutput.insertPlainText(row+'\n')
-            
