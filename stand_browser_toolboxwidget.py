@@ -334,10 +334,12 @@ class StandBrowserToolboxWidget(QDialog, FORM_CLASS):
         # Find delimiters and quotation characters
         delim = self.leDelim.text()
         quote = self.leStringQuote.text()
-        
-        # Loop over each
+
+        # Set header
+        self.teOutput.setPlainText('') 
         row = u'Avd;Area;Ålder;Hkl;SI;m3sk/ha;m3sk/avd;Mål;TGLBÄ;Medeldia;Årlig tillväxt;Beskrivning;Uppdaterad;Källa\n'
-        self.teOutput.setPlainText(row)
+        self.teOutput.insertPlainText(row)
+        # Loop over each
         for feat in sorted(stand_layer.getFeatures(), key=self.stand_sort):
             row  = quote + self.pretty_field(feat, 'standid') + quote + delim
             row += self.pretty_field(feat, 'prodarea') + delim
